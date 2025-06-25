@@ -26,9 +26,9 @@ public class Prediction
     [Required]
     public DateTime ResolutionDate { get; set; }
 
-    public Boolean IsResolved { get; set; }
+    public bool IsResolved { get; set; }
 
-    public Boolean IsCorrect { get; set; }
+    public bool IsCorrect { get; set; }
 
     public Guid ResolvedBy { get; set; }
 

@@ -20,7 +20,7 @@ public class PredictionVote
     public required User UserId { get; set; }
 
     [Required]
-    public Boolean PredictedOutcome { get; set; }
+    public bool PredictedOutcome { get; set; }
 
     [Required]
     public DateTime VotedAt { get; set; }
