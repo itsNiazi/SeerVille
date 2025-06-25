@@ -1,0 +1,30 @@
+# ========================== BACKEND ==========================
+# Build
+bin/
+obj/
+out/
+
+# User-specific
+.vscode/
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Sensitive config
+secrets.json
+appsettings.*.local.json
+
+# Dotnet artifacts
+*.db
+*.db-shm
+*.db-wal
+*.pdb
+
+# EF Core
+Migrations/
+
+# OS-specific
+.DS_Store
+Thumbs.db
