@@ -1,14 +1,30 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Backend.DTOs;
 
 public class PredictionDto
 {
+    [Required]
     public Guid PredictionId { get; set; }
-    public Guid CreatorId { get; set; }
-    public Guid TopicId { get; set; }
+
+    [Required]
+    public required Guid CreatorId { get; set; }
+
+    [Required]
+    public required Guid TopicId { get; set; }
+
+    [Required]
     public required string PredictionName { get; set; }
-    public DateTime PredictionDate { get; set; }
-    public DateTime ResolutionDate { get; set; }
-    public bool IsResolved { get; set; }
-    public bool IsCorrect { get; set; }
-    public DateTime ResolvedAt { get; set; }
+
+    [Required]
+    public required DateTime PredictionDate { get; set; }
+
+    [Required]
+    public required DateTime ResolutionDate { get; set; }
+
+    [Required]
+    public required bool IsResolved { get; set; }
+
+    public bool? IsCorrect { get; set; }
+    public DateTime? ResolvedAt { get; set; }
 }

@@ -1,10 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Backend.DTOs;
 
 public class PredictionVoteDto
 {
+    [Required]
     public Guid VoteId { get; set; }
-    public Guid PredictionId { get; set; }
-    public Guid UserId { get; set; }
-    public bool PredictedOutcome { get; set; }
-    public DateTime VotedAt { get; set; }
+
+    [Required]
+    public required Guid PredictionId { get; set; }
+
+    [Required]
+    public required Guid UserId { get; set; }
+
+    [Required]
+    public required bool PredictedOutcome { get; set; }
+
+    [Required]
+    public required DateTime VotedAt { get; set; }
 }

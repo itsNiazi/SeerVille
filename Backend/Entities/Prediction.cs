@@ -6,43 +6,27 @@ namespace Backend.Entities;
 public class Prediction
 {
     [Key]
-    [Required]
-    [MaxLength(50)]
     public Guid PredictionId { get; set; }
-
-    [Required]
     public required Guid CreatorId { get; set; }
-
-    [Required]
     public required Guid TopicId { get; set; }
-
-    [Required]
-    [MaxLength(50)]
     public required string PredictionName { get; set; }
+    public required DateTime PredictionDate { get; set; }
+    public required DateTime ResolutionDate { get; set; }
+    public required bool IsResolved { get; set; }
 
-    [Required]
-    public DateTime PredictionDate { get; set; }
+    public bool? IsCorrect { get; set; }
+    public Guid? ResolvedBy { get; set; }
+    public DateTime? ResolvedAt { get; set; }
 
-    [Required]
-    public DateTime ResolutionDate { get; set; }
-
-    public bool IsResolved { get; set; }
-
-    public bool IsCorrect { get; set; }
-
-    public Guid ResolvedBy { get; set; }
-
-    public DateTime ResolvedAt { get; set; }
-
+    // Navigational hmm?
     [ForeignKey("CreatorId")]
-    public required User Creator { get; set; }
+    public User? Creator { get; set; }
 
     [ForeignKey("TopicId")]
-    public required Topic Topic { get; set; }
+    public Topic? Topic { get; set; }
 
     [ForeignKey("ResolvedBy")]
-    public required User ResolvedByUser { get; set; }
+    public User? ResolvedByUser { get; set; }
 
-    // hmm?
     public ICollection<PredictionVote>? Votes { get; set; }
 }

@@ -7,27 +7,15 @@ namespace Backend.Entities;
 public class PredictionVote
 {
     [Key]
-    [Required]
-    [MaxLength(50)]
     public Guid VoteId { get; set; }
-
-    [Required]
-    [MaxLength(20)]
-    public required Prediction PredictionId { get; set; }
-
-    [Required]
-    [MaxLength(20)]
-    public required User UserId { get; set; }
-
-    [Required]
-    public bool PredictedOutcome { get; set; }
-
-    [Required]
-    public DateTime VotedAt { get; set; }
+    public required Guid PredictionId { get; set; }
+    public required Guid UserId { get; set; }
+    public required bool PredictedOutcome { get; set; }
+    public required DateTime VotedAt { get; set; }
 
     [ForeignKey("PredictionId")]
-    public required Prediction Prediction { get; set; }
+    public Prediction? Prediction { get; set; }
 
     [ForeignKey("UserId")]
-    public required User User { get; set; }
+    public User? User { get; set; }
 }
