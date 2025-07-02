@@ -15,5 +15,11 @@ public class UserDto
     public required string Email { get; set; }
 
     [Required]
+    public required string Role { get; set; }
+
+    [Required]
+    public required string Token { get; set; }
+
+    [Required]
     public required DateTime CreatedAt { get; set; }
 }

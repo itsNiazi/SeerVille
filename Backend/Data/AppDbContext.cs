@@ -17,11 +17,19 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         // Need to define Relationships and Constraints here
+        modelBuilder.Entity<User>()
+           .HasIndex(u => u.Email)
+           .IsUnique();
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
+
         modelBuilder.Entity<Prediction>()
-       .HasOne(p => p.Creator)
-       .WithMany()
-       .HasForeignKey(p => p.CreatorId)
-       .OnDelete(DeleteBehavior.Restrict);
+            .HasOne(p => p.Creator)
+            .WithMany()
+            .HasForeignKey(p => p.CreatorId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Prediction>()
             .HasOne(p => p.ResolvedByUser)

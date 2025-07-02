@@ -5,10 +5,11 @@ namespace Backend.Entities;
 public class User
 {
     [Key]
-    public Guid UserId { get; set; }
+    public required Guid UserId { get; set; }
     public required string Username { get; set; }
-    public required string PasswordHash { get; set; }
     public required string Email { get; set; }
+    public required string PasswordHash { get; set; }
+    public required string Role { get; set; }
     public required DateTime CreatedAt { get; set; }
 
     // Navigational hmm?
