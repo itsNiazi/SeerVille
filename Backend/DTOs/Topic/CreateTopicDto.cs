@@ -4,6 +4,7 @@ namespace Backend.DTOs;
 
 public class CreateTopicDto
 {
+    //REGEX to prevent Special character & trailing white space?
     [Required]
     public required string Name { get; set; }
 

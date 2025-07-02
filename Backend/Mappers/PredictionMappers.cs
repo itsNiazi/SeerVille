@@ -27,7 +27,7 @@ public static class PredictionMappers
         return new Prediction
         {
             PredictionId = Guid.NewGuid(),
-            CreatorId = prediction.CreatorId,
+            CreatorId = prediction.CreatorId,// should be from session and not provided in the CreatePredictionDto!!
             TopicId = prediction.TopicId,
             PredictionName = prediction.PredictionName,
             PredictionDate = DateTime.UtcNow,

@@ -4,6 +4,8 @@ namespace Backend.DTOs;
 
 public class CreatePredictionDto
 {
+    // Should not be provided here by the api user!
+    // Extracted from the session user credentials?
     [Required]
     public Guid CreatorId { get; set; }
 
