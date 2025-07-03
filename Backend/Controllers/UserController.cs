@@ -1,7 +1,7 @@
 using Backend.DTOs;
 using Backend.DTOs.User;
 using Backend.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -17,6 +17,7 @@ namespace Backend.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginUserDto loginDto)
         {
@@ -35,7 +36,7 @@ namespace Backend.Controllers
 
             return Ok(userDto);
         }
-
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto registerDto)
         {

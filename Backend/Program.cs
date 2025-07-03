@@ -1,8 +1,10 @@
 using System.Text;
 using Backend.Data;
+using Backend.Helpers;
 using Backend.Interfaces;
 using Backend.Repositories;
 using Backend.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -22,16 +24,31 @@ builder.Services.AddAuthentication("Bearer")
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false, // turn true
-            ValidateAudience = false, // turn true
+            ValidateIssuer = true, // turn true
+            ValidateAudience = true, // turn true
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SigningKey"]))
+
         };
     });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
+    options.AddPolicy(Roles.Admin, policy =>
+        policy.RequireRole(Roles.Admin));
+
+    options.AddPolicy(Roles.Moderator, policy =>
+        policy.RequireRole(Roles.Admin, Roles.Moderator));
+
+});
 
 // Services
 builder.Services.AddSingleton<TokenService>();
@@ -44,7 +61,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -57,7 +73,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

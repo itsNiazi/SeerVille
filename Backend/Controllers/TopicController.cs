@@ -1,6 +1,8 @@
 using Backend.DTOs;
+using Backend.Helpers;
 using Backend.Interfaces;
 using Backend.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers
@@ -20,6 +22,8 @@ namespace Backend.Controllers
         /// [GET]: api/topic
         /// </summary>
         /// <returns>All topics</returns>
+        // [Authorize(Policy = Roles.Moderator)]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -32,6 +36,7 @@ namespace Backend.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Topic based on provided id</returns>
+        [AllowAnonymous]
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
@@ -44,6 +49,7 @@ namespace Backend.Controllers
         /// </summary>
         /// <param name="topic"></param>
         /// <returns>Created topic details</returns>
+        [Authorize(Policy = Roles.Moderator)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateTopicDto topicDto)
         {
@@ -61,6 +67,7 @@ namespace Backend.Controllers
         /// [DELETE]: api/topic
         /// </summary>
         /// <returns></returns>
+        [Authorize(Policy = Roles.Admin)]
         [HttpDelete]
         public async Task<IActionResult> DeleteAll()
         {
@@ -73,6 +80,7 @@ namespace Backend.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize(Policy = Roles.Moderator)]
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteById([FromRoute] Guid id)
         {
@@ -82,6 +90,7 @@ namespace Backend.Controllers
             return NoContent();
         }
 
+        [Authorize(Policy = Roles.Moderator)]
         [HttpPatch("{id:guid}")]
         public async Task<IActionResult> Patch([FromRoute] Guid id, [FromBody] PatchTopicDto patch)
         {
@@ -93,5 +102,6 @@ namespace Backend.Controllers
 
             return patchedTopic == null ? NotFound() : Ok(patchedTopic);
         }
+
     }
 }
