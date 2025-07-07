@@ -5,6 +5,7 @@ CREATE TABLE Users (
   password_hash   TEXT NOT NULL,
   role            TEXT NOT NULL DEFAULT 'user',             -- user | moderator | admin
   created_at      TEXT NOT NULL DEFAULT (datetime('now'))
+  -- IsDeleted?
 );
 
 CREATE TABLE Topics (
@@ -21,7 +22,7 @@ CREATE TABLE Predictions (
   prediction_date   TEXT NOT NULL DEFAULT (datetime('now')),
   resolution_date   TEXT NOT NULL,
   is_resolved       BOOLEAN DEFAULT FALSE,
-  is_correct        BOOLEAN,
+  is_correct        BOOLEAN,                                -- actual_outcome
   resolved_by       TEXT,
   resolved_at       TEXT,
   FOREIGN KEY (creator_id) REFERENCES Users(user_id),

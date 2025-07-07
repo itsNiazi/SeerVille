@@ -17,13 +17,13 @@ public static class PredictionVoteMappers
         };
     }
 
-    public static PredictionVote ToPredictionVoteEntity(this CreatePredictionVoteDto vote)
+    public static PredictionVote ToPredictionVoteEntity(this CreatePredictionVoteDto vote, string userId)
     {
         return new PredictionVote
         {
             VoteId = Guid.NewGuid(),
             PredictionId = vote.PredictionId,
-            UserId = vote.UserId,
+            UserId = Guid.Parse(userId),
             PredictedOutcome = vote.PredictedOutcome,
             VotedAt = DateTime.UtcNow
         };

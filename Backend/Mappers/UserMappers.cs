@@ -1,10 +1,23 @@
 using Backend.DTOs;
+using Backend.DTOs.User;
 using Backend.Entities;
 
 namespace Backend.Mappers;
 
 public static class UserMappers
 {
+    public static BaseUserDto ToBaseUserDto(this User user)
+    {
+        return new BaseUserDto
+        {
+            UserId = user.UserId,
+            Username = user.Username,
+            Email = user.Email,
+            Role = user.Role,
+            CreatedAt = user.CreatedAt
+        };
+    }
+
     public static UserDto ToUserDto(this User user, string token)
     {
         return new UserDto
@@ -13,12 +26,12 @@ public static class UserMappers
             Username = user.Username,
             Email = user.Email,
             Role = user.Role,
-            Token = token,
+            AccessToken = token,
             CreatedAt = user.CreatedAt
         };
     }
 
-    public static User ToUserEntity(this RegisterUserDto user, string hashedPassword)
+    public static User ToNewUserEntity(this RegisterUserDto user, string hashedPassword)
     {
         return new User
         {
@@ -29,5 +42,10 @@ public static class UserMappers
             Role = "user",
             CreatedAt = DateTime.UtcNow,
         };
+    }
+
+    public static void ToPromotedUserEntity(this User userEntity, PromoteUserDto userDto) //perhaps unnecessary?
+    {
+        userEntity.Role = userDto.Role;
     }
 }

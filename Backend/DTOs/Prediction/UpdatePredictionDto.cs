@@ -1,16 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Backend.DTOs;
+namespace Backend.DTOs.Prediction;
 
 /// <summary>
-/// Represents the object structure and format required from the client for creating predictions.
+/// Represents the object structure and format required from the client for updating prediction.
+/// Excl. resolving predictions.
 /// </summary>
-public class CreatePredictionDto
+public class UpdatePredictionDto //Not same as PatchPredictionDto (IsResolved, IsCorrect, ResolvedBy, ResolvedAt)
 {
     [Required]
-    public required Guid TopicId { get; set; }
-
-    [StringLength(254, MinimumLength = 2)]
+    [StringLength(30, MinimumLength = 2)]
     [RegularExpression("^[a-zA-Z0-9_.-]+$", ErrorMessage = "Prediction name cannot contain spaces or special characters.")]
     public required string PredictionName { get; set; }
 

@@ -1,5 +1,6 @@
 using Backend.DTOs;
 using Backend.DTOs.User;
+using Backend.Helpers;
 using Backend.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,8 +18,48 @@ namespace Backend.Controllers
             _userService = userService;
         }
 
+        [HttpGet]
+        [Authorize(Policy = Roles.Admin)]
+        public async Task<IActionResult> GetAll()
+        {
+            var users = await _userService.GetAllAsync();
+            return Ok(users);
+        }
+
+        [HttpGet("{id:guid}")]
+        [Authorize(Policy = Roles.Admin)]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        {
+            var user = await _userService.GetByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            return Ok(user);
+        }
+
+        [HttpPost]
         [AllowAnonymous]
-        [HttpPost("Login")]
+        public async Task<IActionResult> Register([FromBody] RegisterUserDto registerDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userDto = await _userService.RegisterUserAsync(registerDto);
+            if (userDto == null)
+            {
+                return Conflict("Email already exists");
+            }
+
+            return Ok(userDto); //CreatedAt!
+        }
+
+        [HttpPost("auth")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginUserDto loginDto)
         {
             if (!ModelState.IsValid)
@@ -30,31 +71,32 @@ namespace Backend.Controllers
 
             if (userDto == null)
             {
-                return BadRequest("Email or Password incorrect");
+                return Unauthorized("Email or Password incorrect");
             }
 
-
-            return Ok(userDto);
+            return Ok(userDto); //authenticated status code?
         }
-        [AllowAnonymous]
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDto registerDto)
+
+        [HttpPut("{id:guid}/role")]
+        [Authorize(Policy = Roles.Admin)]
+        public async Task<IActionResult> Promote([FromRoute] Guid id, [FromBody] PromoteUserDto promoteDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var userDto = await _userService.RegisterUserAsync(registerDto);
+            var userDto = await _userService.PromoteUserAsync(id, promoteDto);
+
             if (userDto == null)
             {
-                return BadRequest("Email already exists"); // since usernames are unique as well, we will have collision in the future!!
+                return BadRequest("");
             }
 
-
-            return Ok(userDto);
+            return Ok(userDto); //Updated status code?
         }
 
-        // ChangePassword, DeleteUser, ToModerator, ToAdmin
+        // ChangePassword, DeleteUser
+
     }
 }

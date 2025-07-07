@@ -1,16 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Backend.DTOs;
 
+/// <summary>
+/// Represents topic object sent to the client.
+/// </summary>
 public class TopicDto
 {
-    [Required]
-    public Guid TopicId { get; set; }
-
-    [Required]
+    public required Guid TopicId { get; set; }
     public required string Name { get; set; }
-
-    [Required]
     public required string Description { get; set; }
 }
-

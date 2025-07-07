@@ -45,7 +45,7 @@ public class TopicService : ITopicService
         return deleted == null ? null : deleted.ToTopicDto();
     }
 
-    public async Task<TopicDto?> PatchAsync(Guid id, PatchTopicDto patch)
+    public async Task<TopicDto?> UpdateAsync(Guid id, UpdateTopicDto patch)
     {
         var topic = await _topicRepo.GetByIdAsync(id);
         if (topic == null) return null;
@@ -56,7 +56,7 @@ public class TopicService : ITopicService
         if (!string.IsNullOrWhiteSpace(patch.Description))
             topic.Description = patch.Description.Trim();
 
-        await _topicRepo.PatchAsync(topic);
+        await _topicRepo.UpdateAsync(topic);
         return topic.ToTopicDto();
     }
 }

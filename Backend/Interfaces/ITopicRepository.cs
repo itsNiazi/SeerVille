@@ -8,7 +8,7 @@ public interface ITopicRepository
     Task<Topic?> GetByIdAsync(Guid id);
     Task<Topic> CreateAsync(Topic topic);
     Task<Topic?> DeleteAsync(Guid id);
-    Task<Topic?> DeleteAllAsync(); //Not really architecturally needed, just for development purposes
-    Task<Topic?> PatchAsync(Topic topic);
+    Task<Topic?> DeleteAllAsync();
+    Task<Topic?> UpdateAsync(Topic topic);
     Task<bool> CheckExists(Guid id);
 }

@@ -22,12 +22,12 @@ public static class PredictionMappers
         };
     }
 
-    public static Prediction ToPredictionEntity(this CreatePredictionDto prediction)
+    public static Prediction ToPredictionEntity(this CreatePredictionDto prediction, string userId)
     {
         return new Prediction
         {
             PredictionId = Guid.NewGuid(),
-            CreatorId = prediction.CreatorId,// should be from session and not provided in the CreatePredictionDto!!
+            CreatorId = Guid.Parse(userId),
             TopicId = prediction.TopicId,
             PredictionName = prediction.PredictionName,
             PredictionDate = DateTime.UtcNow,

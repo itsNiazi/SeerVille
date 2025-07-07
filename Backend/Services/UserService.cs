@@ -17,6 +17,20 @@ public class UserService : IUserService
         _userRepo = userRepo;
     }
 
+    public async Task<List<BaseUserDto>> GetAllAsync()
+    {
+        var users = await _userRepo.GetAllAsync();
+        var userDto = users.Select(x => x.ToBaseUserDto()).ToList();
+        return userDto;
+    }
+
+    public async Task<BaseUserDto?> GetByIdAsync(Guid id)
+    {
+        var user = await _userRepo.GetByIdAsync(id);
+        return user == null ? null : user.ToBaseUserDto();
+    }
+
+
     public async Task<UserDto?> LoginUserAsync(LoginUserDto loginDto)
     {
         var userEntity = await _userRepo.GetByEmailAsync(loginDto.Email);
@@ -44,10 +58,27 @@ public class UserService : IUserService
         }
 
         var hashedPassword = PasswordHasher.HashPassword(registerDto.Password);
-        var userEntity = registerDto.ToUserEntity(hashedPassword);
+        var userEntity = registerDto.ToNewUserEntity(hashedPassword);
 
         var token = _tokenService.CreateToken(userEntity);
         await _userRepo.RegisterUserAsync(userEntity);
         return userEntity.ToUserDto(token);
+    }
+
+    public async Task<UserDto?> PromoteUserAsync(Guid id, PromoteUserDto promoteDto)
+    {
+        var userEntity = await _userRepo.GetByIdAsync(id);
+        if (userEntity == null || userEntity.Role == promoteDto.Role)
+        {
+            return null;
+        }
+
+        userEntity.ToPromotedUserEntity(promoteDto); //unnecessary abstraction?
+
+        var token = _tokenService.CreateToken(userEntity);
+
+        var promotedUser = await _userRepo.PromoteUserAsync(userEntity);
+
+        return promotedUser.ToUserDto(token);
     }
 }

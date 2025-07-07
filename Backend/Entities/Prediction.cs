@@ -13,7 +13,6 @@ public class Prediction
     public required DateTime PredictionDate { get; set; }
     public required DateTime ResolutionDate { get; set; }
     public required bool IsResolved { get; set; }
-
     public bool? IsCorrect { get; set; }
     public Guid? ResolvedBy { get; set; }
     public DateTime? ResolvedAt { get; set; }

@@ -1,21 +1,13 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Backend.DTOs;
 
+/// <summary>
+/// Represents the prediction vote object sent to the client.
+/// </summary>
 public class PredictionVoteDto
 {
-    [Required]
-    public Guid VoteId { get; set; }
-
-    [Required]
+    public required Guid VoteId { get; set; }
     public required Guid PredictionId { get; set; }
-
-    [Required]
     public required Guid UserId { get; set; }
-
-    [Required]
     public required bool PredictedOutcome { get; set; }
-
-    [Required]
     public required DateTime VotedAt { get; set; }
 }

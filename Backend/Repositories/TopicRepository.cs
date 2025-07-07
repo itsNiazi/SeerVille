@@ -50,7 +50,7 @@ public class TopicRepository : ITopicRepository
         return null;
     }
 
-    public async Task<Topic?> PatchAsync(Topic topic)
+    public async Task<Topic?> UpdateAsync(Topic topic)
     {
         _context.Topics.Update(topic);
         await _context.SaveChangesAsync();
