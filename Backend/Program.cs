@@ -19,6 +19,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+// CORS configuration
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowClientOrigin", policyBuilder =>
+        policyBuilder.WithOrigins(builder.Configuration["Client:Origin"])
+                     .AllowAnyHeader()
+                     .AllowAnyMethod());
+});
+
+// Authentication
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
     {
@@ -36,6 +46,7 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
+// Authorization
 builder.Services.AddAuthorization(options =>
 {
     options.FallbackPolicy = new AuthorizationPolicyBuilder()
@@ -77,8 +88,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<SecurityHeadersMiddleware>();
+
 app.UseHttpsRedirection();
 
+app.UseCors("AllowClientOrigin");
 app.UseAuthentication();
 app.UseAuthorization();
 
