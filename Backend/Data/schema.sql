@@ -25,9 +25,9 @@ CREATE TABLE Predictions (
   is_correct        BOOLEAN,                                -- actual_outcome
   resolved_by       TEXT,
   resolved_at       TEXT,
-  FOREIGN KEY (creator_id) REFERENCES Users(user_id),
-  FOREIGN KEY (topic_id) REFERENCES Topics(topic_id),
-  FOREIGN KEY (resolved_by) REFERENCES Users(user_id)
+  FOREIGN KEY (creator_id) REFERENCES Users(user_id) ON DELETE RESTRICT,
+  FOREIGN KEY (topic_id) REFERENCES Topics(topic_id) ON DELETE CASCADE,
+  FOREIGN KEY (resolved_by) REFERENCES Users(user_id) ON DELETE SET NUll
 );
 
 CREATE TABLE PredictionVotes (
@@ -36,7 +36,7 @@ CREATE TABLE PredictionVotes (
   user_id           TEXT NOT NULL,
   predicted_outcome BOOLEAN NOT NULL,
   voted_at          TEXT NOT NULL DEFAULT (datetime('now')),
-  FOREIGN KEY (prediction_id) REFERENCES Predictions(prediction_id),
-  FOREIGN KEY (user_id) REFERENCES Users(user_id),
+  FOREIGN KEY (prediction_id) REFERENCES Predictions(prediction_id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
   UNIQUE (prediction_id, user_id)
 );

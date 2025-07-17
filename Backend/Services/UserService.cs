@@ -11,7 +11,7 @@ public class UserService : IUserService
     private readonly TokenService _tokenService;
     private readonly IUserRepository _userRepo;
 
-    public UserService(TokenService tokenService, IUserRepository userRepo) //we need interface for tokenservice too?
+    public UserService(TokenService tokenService, IUserRepository userRepo)
     {
         _tokenService = tokenService;
         _userRepo = userRepo;
@@ -20,9 +20,10 @@ public class UserService : IUserService
     public async Task<List<BaseUserDto>> GetAllAsync()
     {
         var users = await _userRepo.GetAllAsync();
-        var userDto = users.Select(x => x.ToBaseUserDto()).ToList();
-        return userDto;
+        var userDtoList = users.Select(x => x.ToBaseUserDto()).ToList();
+        return userDtoList;
     }
+
 
     public async Task<BaseUserDto?> GetByIdAsync(Guid id)
     {
@@ -49,6 +50,7 @@ public class UserService : IUserService
         return userEntity.ToUserDto(token);
     }
 
+
     public async Task<UserDto?> RegisterUserAsync(RegisterUserDto registerDto)
     {
         var emailExists = await _userRepo.GetByEmailAsync(registerDto.Email);
@@ -65,6 +67,7 @@ public class UserService : IUserService
         return userEntity.ToUserDto(token);
     }
 
+
     public async Task<UserDto?> PromoteUserAsync(Guid id, PromoteUserDto promoteDto)
     {
         var userEntity = await _userRepo.GetByIdAsync(id);
@@ -73,7 +76,7 @@ public class UserService : IUserService
             return null;
         }
 
-        userEntity.ToPromotedUserEntity(promoteDto); //unnecessary abstraction?
+        userEntity.Role = promoteDto.Role;
 
         var token = _tokenService.CreateToken(userEntity);
 

@@ -24,8 +24,8 @@ builder.Services.AddAuthentication("Bearer")
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true, // turn true
-            ValidateAudience = true, // turn true
+            ValidateIssuer = true,
+            ValidateAudience = true,
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
@@ -59,12 +59,16 @@ builder.Services.AddScoped<ITopicService, TopicService>();
 builder.Services.AddScoped<ITopicRepository, TopicRepository>();
 builder.Services.AddScoped<IPredictionService, PredictionService>();
 builder.Services.AddScoped<IPredictionRepository, PredictionRepository>();
+builder.Services.AddScoped<IPredictionVoteService, PredictionVoteService>();
+builder.Services.AddScoped<IPredictionVoteRepository, PredictionVoteRepository>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

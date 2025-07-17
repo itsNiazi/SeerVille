@@ -20,10 +20,12 @@ public class TopicRepository : ITopicRepository
         return await _context.Topics.ToListAsync();
     }
 
+
     public async Task<Topic?> GetByIdAsync(Guid id)
     {
         return await _context.Topics.FindAsync(id);
     }
+
 
     public async Task<Topic> CreateAsync(Topic topicEntity)
     {
@@ -31,6 +33,7 @@ public class TopicRepository : ITopicRepository
         await _context.SaveChangesAsync();
         return topicEntity;
     }
+
 
     public async Task<Topic?> DeleteAsync(Guid id)
     {
@@ -42,6 +45,7 @@ public class TopicRepository : ITopicRepository
         return topic;
     }
 
+
     public async Task<Topic?> DeleteAllAsync()
     {
         var topics = await _context.Topics.ToListAsync();
@@ -50,12 +54,14 @@ public class TopicRepository : ITopicRepository
         return null;
     }
 
+
     public async Task<Topic?> UpdateAsync(Topic topic)
     {
         _context.Topics.Update(topic);
         await _context.SaveChangesAsync();
         return topic;
     }
+
 
     public async Task<bool> CheckExists(Guid id)
     {

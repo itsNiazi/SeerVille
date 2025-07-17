@@ -1,5 +1,4 @@
 using Backend.DTOs;
-using Backend.DTOs.User;
 using Backend.Entities;
 
 namespace Backend.Mappers;
@@ -42,10 +41,5 @@ public static class UserMappers
             Role = "user",
             CreatedAt = DateTime.UtcNow,
         };
-    }
-
-    public static void ToPromotedUserEntity(this User userEntity, PromoteUserDto userDto) //perhaps unnecessary?
-    {
-        userEntity.Role = userDto.Role;
     }
 }

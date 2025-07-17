@@ -17,8 +17,8 @@ public class TopicService : ITopicService
     public async Task<List<TopicDto>> GetAllAsync()
     {
         var topics = await _topicRepo.GetAllAsync();
-        var topicDto = topics.Select(x => x.ToTopicDto()).ToList();
-        return topicDto;
+        var topicDtoList = topics.Select(x => x.ToTopicDto()).ToList();
+        return topicDtoList;
     }
 
     public async Task<TopicDto?> GetByIdAsync(Guid id)
@@ -27,11 +27,11 @@ public class TopicService : ITopicService
         return topic == null ? null : topic.ToTopicDto();
     }
 
-    public async Task<Topic> CreateAsync(CreateTopicDto topic)
+    public async Task<TopicDto> CreateAsync(CreateTopicDto topic)
     {
         var topicEntity = topic.ToTopicEntity();
-        var created = await _topicRepo.CreateAsync(topicEntity);
-        return created;  //hmmm...
+        var createdTopic = await _topicRepo.CreateAsync(topicEntity);
+        return createdTopic.ToTopicDto();
     }
 
     public async Task<Topic?> DeleteAllAsync()
@@ -41,20 +41,21 @@ public class TopicService : ITopicService
 
     public async Task<TopicDto?> DeleteByIdAsync(Guid id)
     {
-        var deleted = await _topicRepo.DeleteAsync(id);
-        return deleted == null ? null : deleted.ToTopicDto();
+        var deletedTopic = await _topicRepo.DeleteAsync(id);
+        return deletedTopic == null ? null : deletedTopic.ToTopicDto();
     }
 
-    public async Task<TopicDto?> UpdateAsync(Guid id, UpdateTopicDto patch)
+    public async Task<TopicDto?> UpdateAsync(Guid id, UpdateTopicDto update)
     {
         var topic = await _topicRepo.GetByIdAsync(id);
-        if (topic == null) return null;
 
-        if (!string.IsNullOrWhiteSpace(patch.Name))
-            topic.Name = patch.Name.Trim();
+        if (topic == null)
+        {
+            return null;
+        }
 
-        if (!string.IsNullOrWhiteSpace(patch.Description))
-            topic.Description = patch.Description.Trim();
+        topic.Name = update.Name;
+        topic.Description = update.Description;
 
         await _topicRepo.UpdateAsync(topic);
         return topic.ToTopicDto();

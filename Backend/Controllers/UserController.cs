@@ -18,6 +18,9 @@ namespace Backend.Controllers
             _userService = userService;
         }
 
+        /// <summary>
+        /// Retrieves all users in the system.
+        /// </summary>
         [HttpGet]
         [Authorize(Policy = Roles.Admin)]
         public async Task<IActionResult> GetAll()
@@ -26,6 +29,9 @@ namespace Backend.Controllers
             return Ok(users);
         }
 
+        /// <summary>
+        /// Retrieves user with provided unique identifier.
+        /// </summary>
         [HttpGet("{id:guid}")]
         [Authorize(Policy = Roles.Admin)]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
@@ -40,6 +46,9 @@ namespace Backend.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// Registers a new user in the system.
+        /// </summary>
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterUserDto registerDto)
@@ -55,9 +64,12 @@ namespace Backend.Controllers
                 return Conflict("Email already exists");
             }
 
-            return Ok(userDto); //CreatedAt!
+            return CreatedAtAction(nameof(GetById), new { id = userDto.UserId }, userDto);
         }
 
+        /// <summary>
+        /// Authenticates a user with the provided email and password.
+        /// </summary>
         [HttpPost("auth")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginUserDto loginDto)
@@ -74,9 +86,12 @@ namespace Backend.Controllers
                 return Unauthorized("Email or Password incorrect");
             }
 
-            return Ok(userDto); //authenticated status code?
+            return Ok(userDto);
         }
 
+        /// <summary>
+        /// Promotes/demotes a user with the provided role.
+        /// </summary>
         [HttpPut("{id:guid}/role")]
         [Authorize(Policy = Roles.Admin)]
         public async Task<IActionResult> Promote([FromRoute] Guid id, [FromBody] PromoteUserDto promoteDto)
@@ -90,13 +105,12 @@ namespace Backend.Controllers
 
             if (userDto == null)
             {
-                return BadRequest("");
+                return NotFound("User not found or already has provided role.");
             }
 
-            return Ok(userDto); //Updated status code?
+            return Ok(userDto);
         }
 
-        // ChangePassword, DeleteUser
-
+        // Forgot password?, ChangePassword, DeleteUser
     }
 }

@@ -3,7 +3,6 @@ using Backend.DTOs.Prediction;
 using Backend.Entities;
 using Backend.Interfaces;
 using Backend.Mappers;
-using Backend.Repositories;
 
 namespace Backend.Services;
 
@@ -37,8 +36,8 @@ public class PredictionService : IPredictionService
 
     public async Task<PredictionDto?> CreateAsync(string id, CreatePredictionDto createDto)
     {
-        var topic = await _topicrepo.GetByIdAsync(createDto.TopicId); //Should it be joins or topic + predcition repo
-        if (topic == null)
+        var topicExists = await _topicrepo.CheckExists(createDto.TopicId);
+        if (!topicExists)
         {
             return null;
         }
@@ -48,18 +47,55 @@ public class PredictionService : IPredictionService
         return createdPrediction.ToPredictionDto();
     }
 
-    // public Task<PredictionDto?> UpdateByIdAsync(Guid id, UpdatePredictionDto updateDto)
-    // {
-    //     throw new NotImplementedException();
-    // }
+    public async Task<PredictionDto?> UpdateByIdAsync(Guid id, UpdatePredictionDto updateDto)
+    {
+        var prediction = await _predictionRepo.GetByIdAsync(id);
+        if (prediction == null)
+        {
+            return null;
+        }
 
-    // public Task<PredictionDto> DeleteAllAsync()
-    // {
-    //     throw new NotImplementedException();
-    // }
+        prediction.PredictionName = updateDto.PredictionName;
+        prediction.ResolutionDate = updateDto.ResolutionDate;
 
-    // public Task<PredictionDto?> DeleteByIdAsync(Guid id)
-    // {
-    //     throw new NotImplementedException();
-    // }
+        var updatedPrediction = await _predictionRepo.UpdateAsync(prediction);
+        return updatedPrediction.ToPredictionDto();
+    }
+
+    public async Task<PredictionDto?> PatchByIdAsync(Guid id, string resolverId, PatchPredictionDto patchDto)
+    {
+        var prediction = await _predictionRepo.GetByIdAsync(id);
+        if (prediction == null)
+        {
+            return null;
+        }
+
+        prediction.IsResolved = patchDto.IsResolved;
+        prediction.IsCorrect = patchDto.IsCorrect;
+        prediction.ResolvedBy = Guid.Parse(resolverId);
+        prediction.ResolvedAt = DateTime.UtcNow;
+
+        var patchedPrediction = await _predictionRepo.PatchAsync(prediction);
+
+        return patchedPrediction.ToPredictionDto();
+    }
+
+    public async Task<Prediction?> DeleteAllAsync()
+    {
+        // Also should not be able to delete predictions that are resolved?
+        return await _predictionRepo.DeleteAllAsync();
+    }
+
+    public async Task<PredictionDto?> DeleteByIdAsync(Guid id)
+    {
+        // Also should not be able to delete topics that are resolved ?
+        var prediction = await _predictionRepo.GetByIdAsync(id);
+        if (prediction == null)
+        {
+            return null;
+        }
+
+        var deletedPrediction = await _predictionRepo.DeleteAsync(prediction);
+        return deletedPrediction.ToPredictionDto();
+    }
 }

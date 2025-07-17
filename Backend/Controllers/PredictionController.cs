@@ -16,10 +16,12 @@ namespace Backend.Controllers
 
         public PredictionController(IPredictionService predictionService)
         {
-
             _predictionService = predictionService;
         }
 
+        /// <summary>
+        /// Retrieves all predictions in the system.
+        /// </summary>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetAll()
@@ -28,6 +30,9 @@ namespace Backend.Controllers
             return Ok(predictions);
         }
 
+        /// <summary>
+        /// Retrieves prediction with provided unique identifier.
+        /// </summary>
         [HttpGet("{id:guid}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
@@ -40,82 +45,108 @@ namespace Backend.Controllers
             return Ok(prediction);
         }
 
-        // [HttpGet("{topic}")]
-        // [AllowAnonymous]
-        // public async Task<IActionResult> GetByTopicId([FromRoute] string topic)
-        // {
-        //     var prediction = await _predictionService.GetByTopicIdAsync(topic);
-        //     if (prediction == null)
-        //     {
-        //         return BadRequest("Invalid topic name");
-        //     }
-        //     return Ok(prediction);
-        // }
-
+        /// <summary>
+        /// Creates prediction in the system with provided prediction details.
+        /// </summary>
         [HttpPost]
         [Authorize(Policy = Roles.Moderator)]
         public async Task<IActionResult> Create([FromBody] CreatePredictionDto createDto)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User identifier not found.");
+            }
+
             var createdPrediction = await _predictionService.CreateAsync(userId, createDto);
             if (createdPrediction == null)
             {
-                return BadRequest("topic id wrong!"); //?
+                return NotFound("Topic with provided ID not found.");
             }
 
-            return Ok(createdPrediction); //CreatedAt!
+            return CreatedAtAction(nameof(GetById), new { id = createdPrediction.PredictionId }, createdPrediction);
         }
 
-        // [HttpPut("{id:guid}")]
-        // [Authorize(Policy = Roles.Moderator)]
-        // public async Task<IActionResult> UpdateById([FromRoute] Guid id, [FromBody] UpdatePredictionDto updateDto)
-        // {
-        //     if (!ModelState.IsValid)
-        //     {
-        //         return BadRequest(ModelState);
-        //     }
-        //     var updatedPrediction = await _predictionService.UpdateByIdAsync(id, updateDto);
-        //     if (updatedPrediction == null)
-        //     {
-        //         return BadRequest("Invalid inputs");
-        //     }
-        //     return Ok(updatedPrediction);
-        // }
+        /// <summary>
+        /// Updates prediction with provided unique identifier.
+        /// </summary>
+        [HttpPut("{id:guid}")]
+        [Authorize(Policy = Roles.Moderator)]
+        public async Task<IActionResult> UpdateById([FromRoute] Guid id, [FromBody] UpdatePredictionDto updateDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        // [HttpPatch("{id:guid}")]
-        // [Authorize(Policy = Roles.Moderator)]
-        // public async Task<IActionResult> PatchById([FromRoute] Guid id, [FromBody] PatchPredictionDto patchDto)
-        // {
-        //     if (!ModelState.IsValid)
-        //     {
-        //         return BadRequest(ModelState);
-        //     }
-        // }
+            var updatedPrediction = await _predictionService.UpdateByIdAsync(id, updateDto);
+            if (updatedPrediction == null)
+            {
+                return NotFound("Prediction with provided ID not found.");
+            }
+            return Ok(updatedPrediction);
+        }
 
-        // [HttpDelete]
-        // [Authorize(Policy = Roles.Admin)]
-        // public async Task<IActionResult> DeleteAll()
-        // {
-        //     //Not async?
-        //     //Delete All
-        //     return Ok();
-        // }
+        /// <summary>
+        /// Patches the prediction status.
+        /// </summary>
+        [HttpPatch("{id:guid}")]
+        [Authorize(Policy = Roles.Moderator)]
+        public async Task<IActionResult> PatchById([FromRoute] Guid id, [FromBody] PatchPredictionDto patchDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var resolverId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        // [HttpDelete("{id:guid}")]
-        // [Authorize(Policy = Roles.Moderator)]
-        // public async Task<IActionResult> DeleteById([FromRoute] Guid id)
-        // {
-        //     //Not async?
-        //     //Delete by ID
-        //     return Ok();
-        // }
+            if (string.IsNullOrEmpty(resolverId))
+            {
+                return Unauthorized("User identifier not found.");
+            }
 
+            var patchedPrediction = await _predictionService.PatchByIdAsync(id, resolverId, patchDto);
+            if (patchedPrediction == null)
+            {
+                return NotFound("Prediction with provided ID not found.");
+            }
+
+            return Ok(patchedPrediction);
+        }
+
+        /// <summary>
+        /// Deletes all predictions in the system.
+        /// </summary>
+        [HttpDelete]
+        [Authorize(Policy = Roles.Admin)]
+        public async Task<IActionResult> DeleteAll()
+        {
+            await _predictionService.DeleteAllAsync();
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Deletes prediction with provided unique identifier.
+        /// </summary>
+        [HttpDelete("{id:guid}")]
+        [Authorize(Policy = Roles.Moderator)]
+        public async Task<IActionResult> DeleteById([FromRoute] Guid id)
+        {
+
+            var deletedPrediction = await _predictionService.DeleteByIdAsync(id);
+            if (deletedPrediction == null)
+            {
+                return NotFound("Prediction with provided ID not found.");
+            }
+            return NoContent();
+        }
 
     }
 }

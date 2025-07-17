@@ -31,18 +31,32 @@ public class PredictionRepository : IPredictionRepository
         return prediction;
     }
 
-    // public Task<Prediction?> UpdateByIdAsync(Prediction updateDto)
-    // {
-    //     throw new NotImplementedException();
-    // }
+    public async Task<Prediction> PatchAsync(Prediction patch)
+    {
+        _context.Predictions.Update(patch);
+        await _context.SaveChangesAsync();
+        return patch;
+    }
 
-    // public Task<Prediction> DeleteAllAsync()
-    // {
-    //     throw new NotImplementedException();
-    // }
+    public async Task<Prediction> UpdateAsync(Prediction update)
+    {
+        _context.Predictions.Update(update);
+        await _context.SaveChangesAsync();
+        return update;
+    }
 
-    // public Task<Prediction?> DeleteByIdAsync(Guid id)
-    // {
-    //     throw new NotImplementedException();
-    // }
+    public async Task<Prediction?> DeleteAllAsync()
+    {
+        var predictions = await _context.Predictions.ToListAsync();
+        _context.Predictions.RemoveRange(predictions);
+        await _context.SaveChangesAsync();
+        return null;
+    }
+
+    public async Task<Prediction> DeleteAsync(Prediction prediction)
+    {
+        _context.Predictions.Remove(prediction);
+        await _context.SaveChangesAsync();
+        return prediction;
+    }
 }

@@ -1,7 +1,6 @@
 using Backend.DTOs;
 using Backend.Helpers;
 using Backend.Interfaces;
-using Backend.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +17,9 @@ namespace Backend.Controllers
             _topicService = topicService;
         }
 
+        /// <summary>
+        /// Retrieves all topics in the system.
+        /// </summary>
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> GetAll()
@@ -26,14 +28,25 @@ namespace Backend.Controllers
             return Ok(topics);
         }
 
+        /// <summary>
+        /// Retrieves topic with provided unique identifier.
+        /// </summary>
         [HttpGet("{id:guid}")]
         [AllowAnonymous]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var topic = await _topicService.GetByIdAsync(id);
-            return topic == null ? NotFound("Topic not found.") : Ok(topic); // convention to send modelstate?
+            if (topic == null)
+            {
+                return NotFound("Topic not found.");
+            }
+
+            return Ok(topic);
         }
 
+        /// <summary>
+        /// Creates a new topic in the system.
+        /// </summary>
         [HttpPost]
         [Authorize(Policy = Roles.Moderator)]
         public async Task<IActionResult> Create([FromBody] CreateTopicDto topicDto)
@@ -44,9 +57,12 @@ namespace Backend.Controllers
             }
 
             var created = await _topicService.CreateAsync(topicDto);
-            return CreatedAtAction(nameof(GetById), new { id = created.TopicId }, created.ToTopicDto()); //Clarify
+            return CreatedAtAction(nameof(GetById), new { id = created.TopicId }, created);
         }
 
+        /// <summary>
+        /// Deletes all topics in the system.
+        /// </summary>
         [HttpDelete]
         [Authorize(Policy = Roles.Admin)]
         public async Task<IActionResult> DeleteAll()
@@ -55,16 +71,25 @@ namespace Backend.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes topic with the provided unique identifier.
+        /// </summary>
         [HttpDelete("{id:guid}")]
         [Authorize(Policy = Roles.Moderator)]
         public async Task<IActionResult> DeleteById([FromRoute] Guid id)
         {
             var deletedTopic = await _topicService.DeleteByIdAsync(id);
-            if (deletedTopic == null) return NotFound("Topic not found.");
+            if (deletedTopic == null)
+            {
+                return NotFound("Topic not found.");
+            }
 
             return NoContent();
         }
 
+        /// <summary>
+        /// Updates topic with provided unique identifier & modifications.
+        /// </summary>
         [HttpPut("{id:guid}")]
         [Authorize(Policy = Roles.Moderator)]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateTopicDto update)
@@ -75,7 +100,12 @@ namespace Backend.Controllers
             }
             var updatedTopic = await _topicService.UpdateAsync(id, update);
 
-            return updatedTopic == null ? NotFound("Topic not found") : Ok(updatedTopic); //updated status code?
+            if (updatedTopic == null)
+            {
+                return NotFound("Topic not found.");
+            }
+
+            return Ok(updatedTopic);
         }
 
     }

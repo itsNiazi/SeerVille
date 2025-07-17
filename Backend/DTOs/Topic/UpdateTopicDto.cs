@@ -7,9 +7,11 @@ namespace Backend.DTOs;
 /// </summary>
 public class UpdateTopicDto
 {
+    [Required]
     [StringLength(30, MinimumLength = 2)]
     [RegularExpression("^[a-zA-Z0-9_.-]+$", ErrorMessage = "Name cannot contain spaces or special characters.")]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
 
-    public string? Description { get; set; }
+    [Required]
+    public required string Description { get; set; }
 }
