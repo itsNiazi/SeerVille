@@ -2,6 +2,7 @@ using System.Text;
 using Backend.Data;
 using Backend.Helpers;
 using Backend.Interfaces;
+using Backend.Middleware;
 using Backend.Repositories;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,7 @@ builder.Services.AddCors(options =>
                      .AllowAnyMethod());
 });
 
+
 // Authentication
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer("Bearer", options =>
@@ -45,6 +47,10 @@ builder.Services.AddAuthentication("Bearer")
 
         };
     });
+
+// Rate Limiter
+builder.Services.AddGlobalRateLimiting();
+
 
 // Authorization
 builder.Services.AddAuthorization(options =>
@@ -88,12 +94,21 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Middlewares
+app.UseMiddleware<IpFilterMiddleware>(builder.Configuration["IpAllowList"]); // Need to change to dynamic persistence list
 app.UseMiddleware<SecurityHeadersMiddleware>();
+
 
 app.UseHttpsRedirection();
 
 app.UseCors("AllowClientOrigin");
 app.UseAuthentication();
+// Fiddle with limit + throttle values + Graceful shutdown?
+app.UseMiddleware<RequestThrottleMiddleware>(
+    8,
+    TimeSpan.FromMinutes(1),
+    TimeSpan.FromMilliseconds(500));
+app.UseRateLimiter();
 app.UseAuthorization();
 
 app.MapControllers();
