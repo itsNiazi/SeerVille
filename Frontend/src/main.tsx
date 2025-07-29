@@ -1,15 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { Toaster } from "sonner";
+import "./styles/global.css";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 import { AuthProvider, useAuth } from "./auth";
 
 // Set up a Router instance from generated routerTree
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  context: {
+    auth: undefined!, // This will be set after wrapping the app in an AuthProvider
+  },
+});
 
-// Register things for typesafety
+// Register things for typesafety here
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router;
@@ -29,6 +36,8 @@ function App() {
   return (
     <AuthProvider>
       <InnerApp />
+      {/* Toaster here or in layout? */}
+      <Toaster />
     </AuthProvider>
   );
 }

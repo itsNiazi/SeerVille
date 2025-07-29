@@ -24,6 +24,11 @@ public class PredictionRepository : IPredictionRepository
         return await _context.Predictions.FindAsync(id);
     }
 
+    public async Task<List<Prediction>> GetByTopicIdAsync(Guid id)
+    {
+        return await _context.Predictions.Where(x => x.TopicId == id).ToListAsync();
+    }
+
     public async Task<Prediction> CreateAsync(Prediction prediction)
     {
         _context.Predictions.Add(prediction);

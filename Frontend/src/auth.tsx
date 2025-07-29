@@ -1,69 +1,55 @@
 import React from "react";
-
-export type userLoginDto = {
-  email: string;
-  password: string;
-};
-
-export type userDto = {
-  userId: string;
-  username: string;
-  email: string;
-  role: string;
-  accessToken: string;
-  createdAt: string;
-};
+import type { SigningResponse } from "./api/internal/auth/auth.schema";
 
 export interface AuthContext {
   isAuthenticated: boolean;
-  login: (username: string) => Promise<void>;
-  logout: () => Promise<void>;
-  user: userDto | null; //null?
+  doSignIn: (signIn: SigningResponse) => void;
+  doSignOut: () => void;
+  user: SigningResponse | null;
 }
 
 const AuthContext = React.createContext<AuthContext | null>(null);
 
-const key = "seerville.auth.user";
+const storageKey = import.meta.env.VITE_INTERNAL_STORAGE_KEY;
 
-function getStoredUser(): userDto | null {
-  const stored = localStorage.getItem(key);
+function getStoredUser(): SigningResponse | null {
+  const stored = localStorage.getItem(storageKey);
   return stored ? JSON.parse(stored) : null;
 }
 
-function setStoredUser(user: userDto | null) {
+function setStoredUser(user: SigningResponse | null) {
   if (user) {
-    localStorage.setItem(key, JSON.stringify(user));
+    localStorage.setItem(storageKey, JSON.stringify(user));
   } else {
-    localStorage.removeItem(key);
+    localStorage.removeItem(storageKey);
   }
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = React.useState<userDto | null>(getStoredUser());
+  const [user, setUser] = React.useState<SigningResponse | null>(getStoredUser());
   const isAuthenticated = !!user;
 
-  function logout() {
+  function doSignOut() {
     setStoredUser(null);
     setUser(null);
   }
 
-  function login(userDTO: userDto) {
-    setStoredUser(userDTO);
-    setUser(userDTO);
+  function doSignIn(signIn: SigningResponse) {
+    setStoredUser(signIn);
+    setUser(signIn);
   }
 
   React.useEffect(() => {
     setUser(getStoredUser());
-    console.log(user);
   }, []);
 
-  return <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ isAuthenticated, user, doSignIn, doSignOut }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const context = React.useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used withing an AuthProvider.");
+    throw new Error("useAuth must be used within an AuthProvider.");
   }
   return context;
 }

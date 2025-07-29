@@ -32,7 +32,7 @@ public class PredictionVoteService : IPredictionVoteService
         }
 
         //Also check if the user has already voted?
-
+        //Also shouldn't be able to vote if resolution date has passed || resolved.
         var voteEntity = voteDto.ToPredictionVoteEntity(userId);
         await _predictionVoteRepo.VoteAsync(voteEntity);
         return voteEntity.ToPredictionVoteDto();

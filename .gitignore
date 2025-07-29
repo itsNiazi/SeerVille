@@ -35,6 +35,8 @@ node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
+.tanstack
+.tanstack*
 
 # testing
 /coverage
