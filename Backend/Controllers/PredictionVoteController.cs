@@ -58,7 +58,6 @@ namespace Backend.Controllers
 
             // return CreatedAtAction(nameof()) need to implement
             return Ok(registeredVote);
-
         }
     }
 }

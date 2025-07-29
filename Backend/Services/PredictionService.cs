@@ -34,6 +34,17 @@ public class PredictionService : IPredictionService
         return prediction.ToPredictionDto();
     }
 
+    public async Task<List<PredictionDto>?> GetByTopicIdAsync(Guid id)
+    {
+        var predictions = await _predictionRepo.GetByTopicIdAsync(id);
+        if (predictions == null || predictions.Count <= 0)
+        {
+            return null;
+        }
+        var predictionDto = predictions.Select(x => x.ToPredictionDto()).ToList();
+        return predictionDto;
+    }
+
     public async Task<PredictionDto?> CreateAsync(string id, CreatePredictionDto createDto)
     {
         var topicExists = await _topicrepo.CheckExists(createDto.TopicId);
