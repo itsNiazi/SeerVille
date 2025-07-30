@@ -1,5 +1,3 @@
-import { getPredictions, getPredictionsByTopicId } from "@/api/internal/predictions/prediction.api";
-import { getTopics } from "@/api/internal/topics/topic.api";
 import { Combobox } from "@/components/combo-box";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,6 +5,8 @@ import { Card, CardAction, CardHeader, CardTitle } from "@/components/ui/card";
 import { IconTrendingUp } from "@tabler/icons-react";
 import { createFileRoute, useLoaderData } from "@tanstack/react-router";
 import { useRef, useState } from "react";
+import { getPredictions, getPredictionsByTopicId } from "@/api/internal/predictions/prediction.api";
+import { getTopics } from "@/api/internal/topics/topic.api";
 
 export const Route = createFileRoute("/auth/predictions")({
   loader: async () => {
