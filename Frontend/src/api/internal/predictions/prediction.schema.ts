@@ -1,10 +1,17 @@
 import { z } from "zod";
 
+const errorMessages = {
+  topicId: "Please provide a valid topic UUID",
+  min: "Prediction name must be atleast 2 characters",
+  date: "Please provide a valid date",
+  bool: "Please provide a boolean value",
+};
+
 export const PredictionResponseSchema = z.object({
   predictionId: z.uuid(),
   creatorId: z.uuid(),
   topicId: z.uuid(),
-  predicationName: z.string(),
+  predictionName: z.string(),
   predictionDate: z.string(),
   resolutionDate: z.string(),
   isResolved: z.boolean(),
@@ -15,19 +22,19 @@ export const PredictionResponseSchema = z.object({
 export const PredictionListResponseSchema = z.array(PredictionResponseSchema);
 
 export const CreatePredictionRequestSchema = z.object({
-  topicId: z.uuid(),
-  predictionName: z.string().min(2),
-  resolutionDate: z.string(),
+  topicId: z.uuid(errorMessages.topicId),
+  predictionName: z.string().min(2, errorMessages.min),
+  resolutionDate: z.string(errorMessages.date),
 });
 
 export const UpdatePredictionRequestSchema = z.object({
-  predictionName: z.string().min(2),
-  resolutionDate: z.string(),
+  predictionName: z.string().min(2, errorMessages.min),
+  resolutionDate: z.string(errorMessages.date),
 });
 
 export const PatchPredictionRequestSchema = z.object({
-  isResolved: z.boolean(),
-  isCorrect: z.boolean(),
+  isResolved: z.boolean(errorMessages.bool),
+  isCorrect: z.boolean(errorMessages.bool),
 });
 
 export type PredictionResponse = z.infer<typeof PredictionResponseSchema>;

@@ -5,9 +5,9 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { SelectSeparator } from "./ui/select";
+import { SelectSeparator } from "../ui/select";
 
-export function Combobox({ data, onSelectTopic }) {
+export function Combobox({ data, onChange }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
@@ -15,7 +15,6 @@ export function Combobox({ data, onSelectTopic }) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant="outline" role="combobox" aria-expanded={open} className="w-[200px] justify-between">
-          {/* {value ? data.find((data) => data.name === value)?.name : "All"} */}
           {value === "All" || value === "" ? "All" : data.find((data) => data.name === value)?.name}
           <ChevronsUpDown className="opacity-50" />
         </Button>
@@ -31,7 +30,7 @@ export function Combobox({ data, onSelectTopic }) {
                 onSelect={(currentValue) => {
                   setValue(currentValue);
                   setOpen(false);
-                  onSelectTopic("All");
+                  onChange("All");
                 }}
               >
                 All
@@ -46,7 +45,7 @@ export function Combobox({ data, onSelectTopic }) {
                   onSelect={(currentValue) => {
                     setValue(currentValue);
                     setOpen(false);
-                    onSelectTopic(data.topicId);
+                    onChange(data.topicId);
                   }}
                 >
                   {data.name}

@@ -22,6 +22,8 @@ export async function api<T>(endpoint: string, options: RequestInit = {}): Promi
     ...options,
   });
 
+  if (apiResponse.status === 204) return; // REVISIT, without this refresh with usestate creates problems for deletes
+
   if (!apiResponse.ok) {
     return {
       error: true,

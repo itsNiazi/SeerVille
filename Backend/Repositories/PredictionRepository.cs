@@ -17,7 +17,31 @@ public class PredictionRepository : IPredictionRepository
     public async Task<List<Prediction>> GetAllAsync()
     {
         return await _context.Predictions.ToListAsync();
+        // return await _context.Predictions
+        //             .Where(p => !p.IsResolved)
+        //             .ToListAsync();
     }
+
+    public async Task<List<PredictionVoteCountDto>> GetAllWithVotesAsync()
+    {
+        return await _context.Predictions
+            .Select(p => new PredictionVoteCountDto
+            {
+                PredictionId = p.PredictionId,
+                PredictionName = p.PredictionName,
+                CreatorId = p.CreatorId,
+                TopicId = p.TopicId,
+                PredictionDate = p.PredictionDate,
+                ResolutionDate = p.ResolutionDate,
+                IsResolved = p.IsResolved,
+                IsCorrect = p.IsCorrect,
+                ResolvedAt = p.ResolvedAt,
+                YesVotes = p.Votes.Count(v => v.PredictedOutcome),
+                NoVotes = p.Votes.Count(v => !v.PredictedOutcome)
+            })
+            .ToListAsync();
+    }
+
 
     public async Task<Prediction?> GetByIdAsync(Guid id)
     {

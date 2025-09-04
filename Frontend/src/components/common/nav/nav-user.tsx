@@ -24,9 +24,8 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-  //Are we just importing or is it available due to provider?
   const auth = useAuth();
-  const navigate = Route.useNavigate(); //hmm
+  const navigate = Route.useNavigate();
 
   async function handleLogout() {
     await auth.doSignOut();

@@ -34,8 +34,9 @@ export function NavMain({
                 key={item.title}
                 tooltip={item.title}
               >
-                {item.icon && <item.icon />}
-                <Link to={item.url}>
+                {/* {item.icon && <item.icon />} */}
+                <Link to={item.url} className="w-full flex gap-2">
+                  {item.icon}
                   <span>{item.title}</span>
                 </Link>
               </SidebarMenuButton>

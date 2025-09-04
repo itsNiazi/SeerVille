@@ -1,5 +1,5 @@
+import { IconBinocularsFilled } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
-import { GalleryVerticalEnd } from "lucide-react";
 import React from "react";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -8,10 +8,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <section className="flex flex-col gap-4 p-6 md:p-10">
         <header className="flex justify-center gap-2 md:justify-start">
           <Link to="/" className="flex items-center gap-2 font-medium">
-            <p className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <GalleryVerticalEnd className="size-4" />
-            </p>
-            <h1>SeerVille</h1>
+            <h1 className="flex items-end justify-center gap-2 text-lg">
+              <IconBinocularsFilled className="!size-8 text-blue-300 " />
+              <p>SeerVille</p>
+            </h1>
           </Link>
         </header>
         <section className="flex flex-1 items-center justify-center">

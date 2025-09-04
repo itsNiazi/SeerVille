@@ -8,7 +8,8 @@ import type {
 } from "./prediction.schema";
 
 export function getPredictions() {
-  return api<PredictionListResponse>("/prediction", { method: "GET" });
+  // return api<PredictionListResponse>("/prediction", { method: "GET" });
+  return api<PredictionListResponse>("/prediction/votes", { method: "GET" });
 }
 
 export function getPredictionById(id: string) {

@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { Toaster } from "sonner";
+import { toastOptions } from "./styles/toaster.styles";
 import "./styles/global.css";
 
 // Import the generated route tree
@@ -37,7 +38,7 @@ function App() {
     <AuthProvider>
       <InnerApp />
       {/* Toaster here or in layout? */}
-      <Toaster />
+      <Toaster toastOptions={toastOptions} />
     </AuthProvider>
   );
 }

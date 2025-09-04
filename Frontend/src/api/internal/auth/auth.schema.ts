@@ -1,18 +1,32 @@
 import { z } from "zod";
 
+const errorMessages = {
+  email: {
+    invalid: "Invalid email address",
+  },
+  username: {
+    min: "Username must be atleast 2 characters",
+    max: "Username must be less than 30 characters",
+    regex: "Username must not contain special characters",
+  },
+  password: {
+    min: "Password must be atleast 8 characters",
+  },
+};
+
 export const SignInRequestSchema = z.object({
-  email: z.email(),
-  password: z.string().min(8),
+  email: z.email(errorMessages.email.invalid),
+  password: z.string().min(8, errorMessages.password.min),
 });
 
 export const SignUpRequestSchema = z.object({
   username: z
     .string()
-    .min(2)
-    .max(30)
-    .regex(/^[a-zA-Z0-9_.-]+$/),
-  email: z.email(),
-  password: z.string().min(8),
+    .min(2, errorMessages.username.min)
+    .max(30, errorMessages.username.max)
+    .regex(/^[a-zA-Z0-9_.-]+$/, errorMessages.username.regex),
+  email: z.email(errorMessages.email.invalid),
+  password: z.string().min(8, errorMessages.password.min),
 });
 
 export const SigningResponseSchema = z.object({
