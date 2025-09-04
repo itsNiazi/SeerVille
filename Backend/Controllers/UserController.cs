@@ -94,6 +94,7 @@ namespace Backend.Controllers
         /// </summary>
         [HttpPut("{id:guid}/role")]
         [Authorize(Policy = Roles.Admin)]
+        // [AllowAnonymous]
         public async Task<IActionResult> Promote([FromRoute] Guid id, [FromBody] PromoteUserDto promoteDto)
         {
             if (!ModelState.IsValid)

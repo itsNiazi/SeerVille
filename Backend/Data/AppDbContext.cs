@@ -60,6 +60,7 @@ public class AppDbContext : DbContext
             entity.Property(p => p.CreatorId).HasColumnName("creator_id");
             entity.Property(p => p.TopicId).HasColumnName("topic_id");
             entity.Property(p => p.PredictionName).HasColumnName("prediction_name");
+            entity.Property(p => p.PredictionRules).HasColumnName("prediction_rules");
             entity.Property(p => p.PredictionDate).HasColumnName("prediction_date");
             entity.Property(p => p.ResolutionDate).HasColumnName("resolution_date");
             entity.Property(p => p.IsResolved).HasColumnName("is_resolved");

@@ -12,6 +12,7 @@ export const PredictionResponseSchema = z.object({
   creatorId: z.uuid(),
   topicId: z.uuid(),
   predictionName: z.string(),
+  predictionRules: z.string(),
   predictionDate: z.string(),
   resolutionDate: z.string(),
   isResolved: z.boolean(),

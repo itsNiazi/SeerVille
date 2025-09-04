@@ -13,6 +13,7 @@ public static class PredictionMappers
             CreatorId = prediction.CreatorId,
             TopicId = prediction.TopicId,
             PredictionName = prediction.PredictionName,
+            PredictionRules = prediction.PredictionRules,
             PredictionDate = prediction.PredictionDate,
             ResolutionDate = prediction.ResolutionDate,
             IsResolved = prediction.IsResolved,
@@ -29,6 +30,7 @@ public static class PredictionMappers
             CreatorId = Guid.Parse(userId),
             TopicId = prediction.TopicId,
             PredictionName = prediction.PredictionName,
+            PredictionRules = "Temp text", //fix this
             PredictionDate = DateTime.UtcNow,
             ResolutionDate = prediction.ResolutionDate,
             IsResolved = false,
