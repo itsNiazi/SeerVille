@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { LoginForm } from "@/components/login-form";
+import { LoginForm } from "@/components/features/auth/login-form";
 import { z } from "zod";
 import AuthLayout from "@/components/layouts/auth-layout";
 

@@ -44,10 +44,8 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
       const result = SignInRequestSchema.safeParse(signInRequest);
 
       if (!result.success) {
-        const fieldError = result.error.issues[0].path[0];
-        fieldError === "email"
-          ? setFormError("Invalid email address")
-          : setFormError("Password must be atleast 8 characters");
+        const fieldError = result.error.issues[0].message;
+        setFormError(fieldError);
         return;
       }
 
@@ -62,15 +60,15 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
           default:
             setError("Unexpected error occured.");
         }
-      } else {
-        // Output validation (Server data)
-        const apiResult = SigningResponseSchema.safeParse(response);
-        console.log(response);
-        if (apiResult.success) {
-          await auth.doSignIn(response);
-          await router.invalidate();
-          await navigate({ to: search.redirect || fallback });
-        }
+        return;
+      }
+
+      // Output validation (Server data)
+      const apiResult = SigningResponseSchema.safeParse(response);
+      if (apiResult.success) {
+        await auth.doSignIn(response);
+        await router.invalidate();
+        await navigate({ to: search.redirect || fallback });
       }
     } catch (error) {
       setError("Unexpected error occured.");

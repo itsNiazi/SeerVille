@@ -17,6 +17,12 @@ public class PredictionService : IPredictionService
         _topicrepo = topicRepo;
     }
 
+    public async Task<List<PredictionVoteCountDto>> GetAllWithVotesAsync()
+    {
+        var predictions = await _predictionRepo.GetAllWithVotesAsync();
+        return predictions;
+    }
+
     public async Task<List<PredictionDto>> GetAllAsync()
     {
         var predictions = await _predictionRepo.GetAllAsync();
@@ -65,6 +71,11 @@ public class PredictionService : IPredictionService
         {
             return null;
         }
+
+        // if (prediction.IsResolved)
+        // {
+        //     return null;
+        // }
 
         prediction.PredictionName = updateDto.PredictionName;
         prediction.ResolutionDate = updateDto.ResolutionDate;

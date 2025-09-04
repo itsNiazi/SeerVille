@@ -7,6 +7,7 @@ namespace Backend.Interfaces;
 public interface IPredictionService
 {
     Task<List<PredictionDto>> GetAllAsync();
+    Task<List<PredictionVoteCountDto>> GetAllWithVotesAsync();
     Task<PredictionDto?> GetByIdAsync(Guid id);
     Task<List<PredictionDto>?> GetByTopicIdAsync(Guid id);
     Task<PredictionDto?> CreateAsync(string id, CreatePredictionDto createDto);

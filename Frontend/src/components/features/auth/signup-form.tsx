@@ -40,22 +40,24 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"form">
       const result = SignUpRequestSchema.safeParse(SignUpRequest);
 
       if (!result.success) {
-        setError("Ayoo"); // useFormError
+        const fieldError = result.error.issues[0].message;
+        setFormError(fieldError);
         return;
       }
 
       const response = await signUp(SignUpRequest);
-      if (!response.ok) {
+      if (response.error) {
         switch (response.status) {
           case 400:
             setError("Invalid input, please try again.");
             break;
           case 409:
-            setError("Email already exists!");
+            setError("Email already exists");
             break;
           default:
             setError("Unexpected error occured.");
         }
+        return;
       }
 
       const apiResult = SigningResponseSchema.safeParse(response);

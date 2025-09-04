@@ -30,6 +30,14 @@ namespace Backend.Controllers
             return Ok(predictions);
         }
 
+        [HttpGet("votes")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetAllWithVotes()   //Should be with query object?
+        {
+            var predictions = await _predictionService.GetAllWithVotesAsync();
+            return Ok(predictions);
+        }
+
         /// <summary>
         /// Retrieves prediction with provided unique identifier.
         /// </summary>

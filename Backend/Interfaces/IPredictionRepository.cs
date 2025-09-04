@@ -5,6 +5,7 @@ namespace Backend.Interfaces;
 public interface IPredictionRepository
 {
     Task<List<Prediction>> GetAllAsync();
+    Task<List<PredictionVoteCountDto>> GetAllWithVotesAsync();
     Task<Prediction?> GetByIdAsync(Guid id);
     Task<List<Prediction>> GetByTopicIdAsync(Guid id);
     Task<Prediction> CreateAsync(Prediction prediction);
