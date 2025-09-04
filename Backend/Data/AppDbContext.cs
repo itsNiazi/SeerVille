@@ -29,6 +29,7 @@ public class AppDbContext : DbContext
             entity.Property(u => u.PasswordHash).HasColumnName("password_hash");
             entity.Property(u => u.Role).HasColumnName("role");
             entity.Property(u => u.CreatedAt).HasColumnName("created_at");
+            entity.Property(u => u.AvatarPath).HasColumnName("avatar_path");
 
             entity.HasIndex(u => u.Email).IsUnique();
             entity.HasIndex(u => u.Username).IsUnique();

@@ -4,8 +4,10 @@ CREATE TABLE Users (
   email           TEXT NOT NULL UNIQUE,
   password_hash   TEXT NOT NULL,
   role            TEXT NOT NULL DEFAULT 'user',             -- user | moderator | admin
-  created_at      TEXT NOT NULL DEFAULT (datetime('now'))
+  created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+  avatar_path     TEXT NOT NULL DEFAULT '/avatars/avatar.png'
   -- IsDeleted?
+  -- IsBanned?
 );
 
 CREATE TABLE Topics (

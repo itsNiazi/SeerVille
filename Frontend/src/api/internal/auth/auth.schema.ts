@@ -36,6 +36,7 @@ export const SigningResponseSchema = z.object({
   role: z.enum(["user", "moderator", "admin"]),
   accessToken: z.jwt(),
   createdAt: z.string(), //figure out proper date validation
+  avatarPath: z.string(),
 });
 
 // TypesScript types inferred from schemas.

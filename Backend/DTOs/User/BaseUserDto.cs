@@ -10,4 +10,5 @@ public class BaseUserDto
     public required string Email { get; set; }
     public required string Role { get; set; }
     public required DateTime CreatedAt { get; set; }
+    public required string AvatarPath { get; set; }
 }
