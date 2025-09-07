@@ -1,11 +1,12 @@
+using Backend.DTOs;
 using Backend.Entities;
+using Backend.Helpers.QueryObjects;
 
 namespace Backend.Interfaces;
 
 public interface IPredictionRepository
 {
-    Task<List<Prediction>> GetAllAsync();
-    Task<List<PredictionVoteCountDto>> GetAllWithVotesAsync();
+    Task<List<PredictionSummaryDto>> GetAllAsync(Guid userId, PredictionQuery query);
     Task<Prediction?> GetByIdAsync(Guid id);
     Task<List<Prediction>> GetByTopicIdAsync(Guid id);
     Task<Prediction> CreateAsync(Prediction prediction);

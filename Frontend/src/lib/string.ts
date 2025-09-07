@@ -9,6 +9,7 @@ export function capitalize(string: string) {
 }
 
 export function abbreviateCount(value: number) {
+  // temp disabled
   assert.isNumber(value);
 
   const formatted = new Intl.NumberFormat("en-US", {

@@ -9,7 +9,7 @@ namespace Backend.DTOs.Prediction;
 public class UpdatePredictionDto //Not same as PatchPredictionDto (IsResolved, IsCorrect, ResolvedBy, ResolvedAt)
 {
     [Required]
-    [StringLength(30, MinimumLength = 2)]
+    [StringLength(254, MinimumLength = 2)]
     // [RegularExpression("^[a-zA-Z0-9_.-]+$", ErrorMessage = "Prediction name cannot contain spaces or special characters.")]
     public required string PredictionName { get; set; }
 

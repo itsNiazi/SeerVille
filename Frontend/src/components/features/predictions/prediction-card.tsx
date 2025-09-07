@@ -7,7 +7,7 @@ import {
   PatchPredictionRequestSchema,
   UpdatePredictionRequestSchema,
   type PatchPredictionRequest,
-  type PredictionResponse,
+  type PredictionSummaryResponse,
   type UpdatePredictionRequest,
 } from "@/api/internal/predictions/prediction.schema";
 import { patchPredictionById, updatePredictionById } from "@/api/internal/predictions/prediction.api";
@@ -35,24 +35,22 @@ import { Card, CardAction, CardHeader, CardTitle } from "../../ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../../ui/dropdown-menu";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
 import { Label as RechartsLabel, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
-import { IconArchiveFilled, IconCheckbox, IconEdit, IconTrash } from "@tabler/icons-react";
+import { IconArchiveFilled, IconArrowDown, IconArrowUp, IconCheckbox, IconEdit, IconTrash } from "@tabler/icons-react";
 import { toast } from "sonner";
 import { CreatePredictionVoteRequestSchema } from "@/api/internal/predictions/predictionVote.schema";
 
 interface PredictionDialogProps {
-  prediction: PredictionResponse | null;
+  prediction: PredictionSummaryResponse | null;
   open: boolean;
-  onChange: (prediction: PredictionResponse) => void;
+  onChange: (prediction: PredictionSummaryResponse) => void;
   onClose: () => void;
 }
 
@@ -249,18 +247,89 @@ export function ResolveDialog({ prediction, open, onChange, onClose }: Predictio
 
 interface PredictionCardProps {
   isAdmin?: boolean;
-  prediction: PredictionResponse;
+  prediction: PredictionSummaryResponse;
   onDelete: (predictionId: string) => void;
-  onResolve: (prediction: PredictionResponse) => void;
-  onEdit: (prediction: PredictionResponse) => void;
-  onVote: (prediction: PredictionResponse) => void;
+  onResolve: (prediction: PredictionSummaryResponse) => void;
+  onEdit: (prediction: PredictionSummaryResponse) => void;
+  onVote: (prediction: PredictionSummaryResponse) => void;
 }
 
 export function PredictionCard({ isAdmin, prediction, onDelete, onResolve, onEdit, onVote }: PredictionCardProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const resolutionTimestamp = new Date(prediction.resolutionDate).getTime();
   const tooLate = resolutionTimestamp < Date.now() || prediction.isResolved;
-  const totalVotes = prediction.yesVotes + prediction.noVotes;
+  const hasVoted = prediction.predictedOutcome != null;
+  const totalVotes = prediction.totalVotes;
+  const isDisabled = tooLate || isSubmitting || hasVoted;
+  const voteCorrect = prediction.predictedOutcome === prediction.isCorrect;
+  const isResolved = prediction.isResolved;
+
+  function renderVoteUI() {
+    if (isResolved && hasVoted) {
+      return (
+        <div className="text-sm font-medium text-center">
+          {voteCorrect ? (
+            <span className="text-chart-1">🎉 Your vote was correct!</span>
+          ) : (
+            <span className="text-chart-2">❌ Your vote was incorrect</span>
+          )}
+          <div className="text-muted-foreground text-xs mt-1">Overall: {getResolutionText()}</div>
+        </div>
+      );
+    }
+
+    if (isResolved && !hasVoted) {
+      return (
+        <div className="text-muted-foreground text-xs text-center">
+          <p className="text-sm">Prediction is resolved</p>
+          Overall: {getResolutionText()}
+        </div>
+      );
+    }
+
+    if (tooLate) {
+      return <p className="text-sm text-muted-foreground italic">Voting closed</p>;
+    }
+
+    if (hasVoted) {
+      return (
+        <p className="text-sm text-foreground">
+          You voted{" "}
+          <span className={prediction.predictedOutcome ? "text-chart-1" : "text-chart-2"}>
+            {prediction.predictedOutcome ? "Yes" : "No"}
+          </span>
+        </p>
+      );
+    }
+
+    // Default case (Voting buttons)
+    return (
+      <>
+        <Button
+          className="w-[35%]"
+          variant={"outline"}
+          disabled={isDisabled}
+          onClick={() => handlePredictionVote(true)}
+        >
+          Yes
+        </Button>
+        <Button
+          className="w-[35%] hover:bg-[var(--chart-2)]/70"
+          variant={"outline"}
+          disabled={isDisabled}
+          onClick={() => handlePredictionVote(false)}
+        >
+          No
+        </Button>
+      </>
+    );
+  }
+
+  function getResolutionText() {
+    if (prediction.isCorrect === true) return "Prediction was correct";
+    if (prediction.isCorrect === false) return "Prediction was incorrect";
+    return "Prediction resolved";
+  }
 
   async function handlePredictionVote(value: boolean) {
     try {
@@ -280,25 +349,34 @@ export function PredictionCard({ isAdmin, prediction, onDelete, onResolve, onEdi
         return;
       }
 
-      const updatedPrediction = {
-        ...prediction,
-        yesVotes: value ? prediction.yesVotes + 1 : prediction.yesVotes,
-        noVotes: !value ? prediction.noVotes + 1 : prediction.noVotes,
-      };
       const result = CreatePredictionVoteRequestSchema.safeParse({
         predictionId: prediction.predictionId,
         predictedOutcome: value,
       });
+
       if (result.error) {
         toast.warning(result.error.issues[0].message);
         return;
       }
 
-      const response = await createPredictionVote({ predictionId: prediction.predictionId, predictedOutcome: value });
+      const response = await createPredictionVote({
+        predictionId: prediction.predictionId,
+        predictedOutcome: value,
+      });
+
       if (response.error) {
         toast.warning("Unexpected error occurred");
         return;
       }
+
+      const updatedPrediction = {
+        ...prediction,
+        yesVotes: value ? prediction.yesVotes + 1 : prediction.yesVotes,
+        noVotes: !value ? prediction.noVotes + 1 : prediction.noVotes,
+        totalVotes: prediction.totalVotes + 1,
+        predictedOutcome: value,
+      };
+
       onVote(updatedPrediction);
     } catch {
       toast.warning("Unexpected error occurred");
@@ -309,7 +387,7 @@ export function PredictionCard({ isAdmin, prediction, onDelete, onResolve, onEdi
   return (
     <>
       <Card
-        className="@container/card w-xs max-h-45 py-3 gap-3  justify-around overflow-hidden hover:shadow-lg "
+        className="@container/card w-xs max-h-45 py-3 gap-3  justify-around overflow-hidden hover:shadow-lg hover:bg-card/90"
         key={prediction.predictionId}
       >
         <CardHeader>
@@ -351,26 +429,7 @@ export function PredictionCard({ isAdmin, prediction, onDelete, onResolve, onEdi
             )}
           </CardAction>
         </CardHeader>
-        <div className="flex justify-center gap-5">
-          <Button
-            className="w-[35%]"
-            variant={"outline"}
-            disabled={tooLate || isSubmitting}
-            onClick={() => handlePredictionVote(true)}
-          >
-            Yes
-          </Button>
-          <Button
-            className="w-[35%] hover:bg-[var(--clr-test-2)]/70"
-            variant={"outline"}
-            //hasVoted
-            disabled={tooLate || isSubmitting}
-            onClick={() => handlePredictionVote(false)}
-          >
-            No
-          </Button>
-        </div>
-
+        <div className="flex justify-center gap-5 max-h-[2.25rem] min-h-[2.25rem]">{renderVoteUI()}</div>
         <div className="flex justify-between mx-8">
           <p className="text-xs text-muted-foreground/70 text-center">
             {convertToLocalDate(prediction.resolutionDate)}
@@ -397,7 +456,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartRadialStacked({ prediction }) {
-  const totalVotes = prediction.yesVotes + prediction.noVotes;
+  const totalVotes = prediction.totalVotes;
   const hasVotes = totalVotes > 0;
   const chartData = [{ yes: hasVotes ? prediction.yesVotes : 1, no: hasVotes ? prediction.noVotes : 0 }];
 
@@ -440,7 +499,10 @@ export function ChartRadialStacked({ prediction }) {
 }
 
 export function PredictionDrawer({ prediction }) {
-  const totalVotes = prediction.yesVotes + prediction.noVotes;
+  const totalVotes = abbreviateCount(prediction.totalVotes);
+  const yesVotes = abbreviateCount(prediction.yesVotes);
+  const noVotes = abbreviateCount(prediction.noVotes);
+
   return (
     <Drawer>
       <DrawerTrigger>
@@ -449,16 +511,17 @@ export function PredictionDrawer({ prediction }) {
         </CardTitle>
       </DrawerTrigger>
       <DrawerContent className="h-1/3">
-        <DrawerHeader>
+        <DrawerHeader className="mx-auto">
           <DrawerTitle>{prediction.predictionName}</DrawerTitle>
           <DrawerDescription>{convertToLocalDate(prediction.resolutionDate)}</DrawerDescription>
           <p className="text-xl text-amber-300">🗳️ {totalVotes}</p>
+          <div className="flex justify-center items-center text-muted-foreground">
+            {yesVotes}
+            <IconArrowUp color="oklch(0.588 0.0993 245.7394)" />
+            <IconArrowDown color="#ff637e" />
+            {noVotes}
+          </div>
         </DrawerHeader>
-        <DrawerFooter>
-          <DrawerClose>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

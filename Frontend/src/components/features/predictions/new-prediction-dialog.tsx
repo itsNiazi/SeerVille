@@ -7,14 +7,14 @@ import { Label } from "../../ui/label";
 import {
   CreatePredictionRequestSchema,
   type CreatePredictionRequest,
-  type PredictionResponse,
+  type PredictionSummaryResponse,
 } from "@/api/internal/predictions/prediction.schema";
 import { createPrediction } from "@/api/internal/predictions/prediction.api";
 import { convertToUtcIso } from "@/lib/date";
 import { toast } from "sonner";
 
 interface NewPredictionBtnProps {
-  onAdd: (prediction: PredictionResponse) => void;
+  onAdd: (prediction: PredictionSummaryResponse) => void;
 }
 export function NewPredictionButton({ onAdd }: NewPredictionBtnProps) {
   const [open, setOpen] = useState(false);
@@ -31,7 +31,7 @@ export function NewPredictionButton({ onAdd }: NewPredictionBtnProps) {
 interface NewPredictionDialogProps {
   open: boolean;
   onClose: () => void;
-  onAdd: (prediction: PredictionResponse) => void;
+  onAdd: (prediction: PredictionSummaryResponse) => void;
 }
 
 export function NewPredictionDialog({ open, onClose, onAdd }: NewPredictionDialogProps) {
@@ -78,6 +78,7 @@ export function NewPredictionDialog({ open, onClose, onAdd }: NewPredictionDialo
         ...response,
         yesVotes: response.yesVotes ?? 0,
         noVotes: response.noVotes ?? 0,
+        totalVotes: response.totalVotes ?? 0,
       };
 
       onAdd(newPrediction);

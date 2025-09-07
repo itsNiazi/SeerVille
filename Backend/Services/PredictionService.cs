@@ -1,6 +1,7 @@
 using Backend.DTOs;
 using Backend.DTOs.Prediction;
 using Backend.Entities;
+using Backend.Helpers.QueryObjects;
 using Backend.Interfaces;
 using Backend.Mappers;
 
@@ -17,18 +18,18 @@ public class PredictionService : IPredictionService
         _topicrepo = topicRepo;
     }
 
-    public async Task<List<PredictionVoteCountDto>> GetAllWithVotesAsync()
+    public async Task<List<PredictionSummaryDto>> GetAllAsync(Guid userId, PredictionQuery query)
     {
-        var predictions = await _predictionRepo.GetAllWithVotesAsync();
+        var predictions = await _predictionRepo.GetAllAsync(userId, query);
         return predictions;
     }
 
-    public async Task<List<PredictionDto>> GetAllAsync()
-    {
-        var predictions = await _predictionRepo.GetAllAsync();
-        var predictionDto = predictions.Select(x => x.ToPredictionDto()).ToList();
-        return predictionDto;
-    }
+    // public async Task<List<PredictionDto>> GetAllAsync(PredictionQuery query)
+    // {
+    //     var predictions = await _predictionRepo.GetAllAsync(query);
+    //     var predictionDto = predictions.Select(x => x.ToPredictionDto()).ToList();
+    //     return predictionDto;
+    // }
 
     public async Task<PredictionDto?> GetByIdAsync(Guid id)
     {

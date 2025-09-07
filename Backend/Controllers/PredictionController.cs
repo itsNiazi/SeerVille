@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Backend.DTOs;
 using Backend.DTOs.Prediction;
 using Backend.Helpers;
+using Backend.Helpers.QueryObjects;
 using Backend.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,22 +20,25 @@ namespace Backend.Controllers
             _predictionService = predictionService;
         }
 
-        /// <summary>
-        /// Retrieves all predictions in the system.
-        /// </summary>
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PredictionQuery query)
         {
-            var predictions = await _predictionService.GetAllAsync();
-            return Ok(predictions);
-        }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        [HttpGet("votes")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetAllWithVotes()   //Should be with query object?
-        {
-            var predictions = await _predictionService.GetAllWithVotesAsync();
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return Unauthorized("User identifier not found.");
+            }
+
+            Guid userId = Guid.Parse(userIdString);
+
+            var predictions = await _predictionService.GetAllAsync(userId, query);
             return Ok(predictions);
         }
 

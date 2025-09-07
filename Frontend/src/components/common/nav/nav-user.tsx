@@ -30,9 +30,9 @@ export function NavUser() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
             >
-              <Avatar className="h-8 w-8 rounded-lg grayscale">
+              <Avatar className="h-8 w-8 rounded-lg grayscale hover:grayscale-0 duration-300 ease-in">
                 <AvatarImage src={auth.user?.avatarPath} alt="avatar" />
                 <AvatarFallback className="rounded-lg">{auth.user?.username[0].toUpperCase()}</AvatarFallback>
               </Avatar>

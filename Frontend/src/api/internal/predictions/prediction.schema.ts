@@ -20,7 +20,25 @@ export const PredictionResponseSchema = z.object({
   resolvedAt: z.string().nullable(),
 });
 
+export const PredictionSummaryResponseSchema = z.object({
+  predictionId: z.uuid(),
+  creatorId: z.uuid(),
+  topicId: z.uuid(),
+  predictionName: z.string(),
+  predictionRules: z.string(),
+  predictionDate: z.string(),
+  resolutionDate: z.string(),
+  isResolved: z.boolean(),
+  isCorrect: z.boolean().nullable(),
+  resolvedAt: z.string().nullable(),
+  yesVotes: z.number(),
+  noVotes: z.number(),
+  totalVotes: z.number(),
+  predictedOutcome: z.boolean().nullable(),
+});
+
 export const PredictionListResponseSchema = z.array(PredictionResponseSchema);
+export const PredictionSummaryListResponseSchema = z.array(PredictionSummaryResponseSchema);
 
 export const CreatePredictionRequestSchema = z.object({
   topicId: z.uuid(errorMessages.topicId),
@@ -40,6 +58,10 @@ export const PatchPredictionRequestSchema = z.object({
 
 export type PredictionResponse = z.infer<typeof PredictionResponseSchema>;
 export type PredictionListResponse = z.infer<typeof PredictionListResponseSchema>;
+
+export type PredictionSummaryResponse = z.infer<typeof PredictionSummaryResponseSchema>;
+export type PredictionSummaryListResponse = z.infer<typeof PredictionSummaryListResponseSchema>;
+
 export type CreatePredictionRequest = z.infer<typeof CreatePredictionRequestSchema>;
 export type UpdatePredictionRequest = z.infer<typeof UpdatePredictionRequestSchema>;
 export type PatchPredictionRequest = z.infer<typeof PatchPredictionRequestSchema>;

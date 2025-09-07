@@ -7,13 +7,14 @@ import {
   getPredictions,
   getPredictionsByTopicId,
 } from "@/api/internal/predictions/prediction.api";
-import type { PredictionListResponse, PredictionResponse } from "@/api/internal/predictions/prediction.schema";
+import type { PredictionSummaryResponse } from "@/api/internal/predictions/prediction.schema";
 
 import { Combobox } from "@/components/common/combo-box";
 import { NewPredictionButton } from "@/components/features/predictions/new-prediction-dialog";
 import { PredictionList } from "@/components/features/predictions/prediction-list";
 
 import { toast } from "sonner";
+import { SelectBox } from "@/components/common/select-box";
 
 export const Route = createFileRoute("/auth/predictions")({
   loader: async () => {
@@ -26,7 +27,8 @@ export const Route = createFileRoute("/auth/predictions")({
 function PredictionsComponent() {
   const auth = useAuth();
   const { predictions: initialPredictions, topics } = useLoaderData({ route: Route });
-  const [predictions, setPredictions] = useState<PredictionListResponse>(initialPredictions);
+  const [predictions, setPredictions] = useState<PredictionSummaryResponse[]>(initialPredictions);
+  console.log(predictions);
   const selectedTopicRef = useRef("All");
 
   async function handleTopicSelect(topicId: string) {
@@ -38,12 +40,18 @@ function PredictionsComponent() {
     setPredictions(topicPredictions);
   }
 
-  function handlePredictionAdd(prediction: PredictionResponse) {
+  async function handleStatusChange(status: string) {
+    const isResolved = status === "Resolved";
+    const statusPredictions = await getPredictions(isResolved);
+    setPredictions(statusPredictions);
+  }
+
+  function handlePredictionAdd(prediction: PredictionSummaryResponse) {
     setPredictions((prev) => [...prev, prediction]);
     toast.success("Prediction added.");
   }
 
-  function handlePredictionChange(prediction: PredictionResponse) {
+  function handlePredictionChange(prediction: PredictionSummaryResponse) {
     setPredictions((prev) => prev.map((p) => (p.predictionId === prediction.predictionId ? prediction : p)));
   }
 
@@ -56,10 +64,14 @@ function PredictionsComponent() {
       toast.error("Failed to delete prediction.");
     }
   }
+  const statusFilters = ["Active", "Resolved"];
+  const sortingFilters = ["Popular", "Ending Soon", "New"];
 
   return (
-    <section className="max-w-[1400px] w-[90%] mx-auto py-6">
-      <div className="flex justify-end mb-5 gap-2">
+    <section className="max-w-[1400px] w-[95%] mx-auto py-6">
+      <div className="flex justify-end mb-5 gap-2 ">
+        <SelectBox label="Sort By:" data={sortingFilters} />
+        <SelectBox label="Status:" data={statusFilters} onChange={handleStatusChange} />
         <Combobox data={topics} onChange={handleTopicSelect} />
         {auth.user && auth.user.role === "admin" ? <NewPredictionButton onAdd={handlePredictionAdd} /> : ""}
       </div>

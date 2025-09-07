@@ -1,15 +1,14 @@
 import { api } from "../internal.api";
 import type {
-  PredictionListResponse,
   PredictionResponse,
   CreatePredictionRequest,
   PatchPredictionRequest,
   UpdatePredictionRequest,
+  PredictionSummaryListResponse,
 } from "./prediction.schema";
 
-export function getPredictions() {
-  // return api<PredictionListResponse>("/prediction", { method: "GET" });
-  return api<PredictionListResponse>("/prediction/votes", { method: "GET" });
+export function getPredictions(bool = false) {
+  return api<PredictionSummaryListResponse>(`/prediction?isResolved=${bool}`, { method: "GET" });
 }
 
 export function getPredictionById(id: string) {
@@ -18,7 +17,8 @@ export function getPredictionById(id: string) {
 
 export function getPredictionsByTopicId(id: string) {
   //should be query param?
-  return api<PredictionResponse>(`/prediction/topic/${id}`, { method: "GET" });
+  // return api<PredictionResponse>(`/prediction/topic/${id}`, { method: "GET" });
+  return api<PredictionResponse>(`/prediction?topicid=${id}`, { method: "GET" });
 }
 
 export function createPrediction(createPrediction: CreatePredictionRequest) {
