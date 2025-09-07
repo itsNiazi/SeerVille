@@ -9,7 +9,6 @@ export function capitalize(string: string) {
 }
 
 export function abbreviateCount(value: number) {
-  // temp disabled
   assert.isNumber(value);
 
   const formatted = new Intl.NumberFormat("en-US", {
@@ -18,4 +17,13 @@ export function abbreviateCount(value: number) {
   }).format(value);
 
   return formatted;
+}
+
+/** Returns a URL-encoded query string from an object of parameters, filtering out empty/null values. */
+export function buildSearchParams(params: Record<string, any>): string {
+  const cleanedParams = Object.fromEntries(
+    Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== "")
+  );
+
+  return new URLSearchParams(cleanedParams).toString();
 }

@@ -5,10 +5,14 @@ import type {
   PatchPredictionRequest,
   UpdatePredictionRequest,
   PredictionSummaryListResponse,
+  PredictionSummaryRequest,
 } from "./prediction.schema";
 
-export function getPredictions(bool = false) {
-  return api<PredictionSummaryListResponse>(`/prediction?isResolved=${bool}`, { method: "GET" });
+export function getPredictions(filter?: PredictionSummaryRequest) {
+  return api<PredictionSummaryListResponse>("/prediction", {
+    method: "GET",
+    params: filter,
+  });
 }
 
 export function getPredictionById(id: string) {
@@ -16,8 +20,6 @@ export function getPredictionById(id: string) {
 }
 
 export function getPredictionsByTopicId(id: string) {
-  //should be query param?
-  // return api<PredictionResponse>(`/prediction/topic/${id}`, { method: "GET" });
   return api<PredictionResponse>(`/prediction?topicid=${id}`, { method: "GET" });
 }
 

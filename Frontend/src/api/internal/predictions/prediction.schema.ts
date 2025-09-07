@@ -20,6 +20,13 @@ export const PredictionResponseSchema = z.object({
   resolvedAt: z.string().nullable(),
 });
 
+export const PredictionSummaryRequestSchema = z.object({
+  topicId: z.uuid().nullable().optional(),
+  isResolved: z.boolean().nullable().optional(),
+  sortBy: z.enum(["new", "endingsoon", "popular"]).optional(),
+  pageSize: z.number().positive().nullable().optional(),
+});
+
 export const PredictionSummaryResponseSchema = z.object({
   predictionId: z.uuid(),
   creatorId: z.uuid(),
@@ -59,6 +66,7 @@ export const PatchPredictionRequestSchema = z.object({
 export type PredictionResponse = z.infer<typeof PredictionResponseSchema>;
 export type PredictionListResponse = z.infer<typeof PredictionListResponseSchema>;
 
+export type PredictionSummaryRequest = z.infer<typeof PredictionSummaryRequestSchema>;
 export type PredictionSummaryResponse = z.infer<typeof PredictionSummaryResponseSchema>;
 export type PredictionSummaryListResponse = z.infer<typeof PredictionSummaryListResponseSchema>;
 

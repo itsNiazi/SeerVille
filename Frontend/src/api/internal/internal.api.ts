@@ -1,3 +1,6 @@
+import type { PredictionSummaryRequest } from "./predictions/prediction.schema";
+import { buildSearchParams } from "@/lib/string";
+
 const BASE_URL = import.meta.env.VITE_INTERNAL_BASE_URL;
 const storageKey = import.meta.env.VITE_INTERNAL_STORAGE_KEY;
 const contentType = "application/json";
@@ -9,27 +12,33 @@ function getAuthToken(storageKey: string): string | null {
   return raw ? JSON.parse(raw).accessToken : null;
 }
 
-export async function api<T>(endpoint: string, options: RequestInit = {}): Promise<T | ApiError> {
+interface ApiOptions extends RequestInit {
+  params?: PredictionSummaryRequest;
+}
+
+export async function api<T>(endpoint: string, options: ApiOptions = {}): Promise<T | ApiError> {
+  const { params, ...fetchOptions } = options;
   const authToken = getAuthToken(storageKey);
+
+  // Build query string if params exist
+  const url = params ? `${BASE_URL}${endpoint}?${buildSearchParams(params)}` : `${BASE_URL}${endpoint}`;
+
   const headers: HeadersInit = {
     "Content-Type": contentType,
-    ...(options.headers || {}),
+    ...(fetchOptions.headers || {}),
     ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
   };
 
-  const apiResponse = await fetch(`${BASE_URL}${endpoint}`, {
+  const response = await fetch(url, {
     headers,
-    ...options,
+    ...fetchOptions,
   });
 
-  if (apiResponse.status === 204) return; // REVISIT, without this refresh with usestate creates problems for deletes
+  if (response.status === 204) return;
 
-  if (!apiResponse.ok) {
-    return {
-      error: true,
-      status: apiResponse.status,
-    };
+  if (!response.ok) {
+    return { error: true, status: response.status };
   }
 
-  return apiResponse.json();
+  return response.json();
 }

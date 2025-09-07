@@ -57,19 +57,6 @@ namespace Backend.Controllers
             return Ok(prediction);
         }
 
-        // SHOULD BE HANDLED AS QUERY PARAM??
-        [HttpGet("topic/{id:guid}")]
-        [AllowAnonymous]
-        public async Task<IActionResult> GetByTopicId([FromRoute] Guid id)
-        {
-            var predictions = await _predictionService.GetByTopicIdAsync(id);
-            if (predictions == null)
-            {
-                return NotFound("Predictions not found.");
-            }
-            return Ok(predictions);
-        }
-
         /// <summary>
         /// Creates prediction in the system with provided prediction details.
         /// </summary>
