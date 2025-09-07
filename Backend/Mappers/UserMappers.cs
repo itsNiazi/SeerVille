@@ -13,7 +13,8 @@ public static class UserMappers
             Username = user.Username,
             Email = user.Email,
             Role = user.Role,
-            CreatedAt = user.CreatedAt
+            CreatedAt = user.CreatedAt,
+            AvatarPath = user.AvatarPath
         };
     }
 
@@ -26,7 +27,9 @@ public static class UserMappers
             Email = user.Email,
             Role = user.Role,
             AccessToken = token,
-            CreatedAt = user.CreatedAt
+            CreatedAt = user.CreatedAt,
+            AvatarPath = user.AvatarPath
+
         };
     }
 
@@ -40,6 +43,7 @@ public static class UserMappers
             PasswordHash = hashedPassword,
             Role = "user",
             CreatedAt = DateTime.UtcNow,
+            AvatarPath = "/avatars/avatar.png"
         };
     }
 }

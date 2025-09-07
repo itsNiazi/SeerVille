@@ -11,6 +11,7 @@ public class User
     public required string PasswordHash { get; set; }
     public required string Role { get; set; }
     public required DateTime CreatedAt { get; set; }
+    public required string AvatarPath { get; set; }
 
     // Navigational hmm?
     public ICollection<Prediction>? PredictionsCreated { get; set; }

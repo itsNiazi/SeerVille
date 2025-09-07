@@ -18,3 +18,12 @@ export function abbreviateCount(value: number) {
 
   return formatted;
 }
+
+/** Returns a URL-encoded query string from an object of parameters, filtering out empty/null values. */
+export function buildSearchParams(params: Record<string, any>): string {
+  const cleanedParams = Object.fromEntries(
+    Object.entries(params).filter(([_, v]) => v !== undefined && v !== null && v !== "")
+  );
+
+  return new URLSearchParams(cleanedParams).toString();
+}

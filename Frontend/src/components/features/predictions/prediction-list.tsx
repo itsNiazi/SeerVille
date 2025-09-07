@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { EditDialog, PredictionCard, ResolveDialog } from "./prediction-card";
 import type { UserResponse } from "@/api/internal/users/user.schema";
-import type { PredictionResponse } from "@/api/internal/predictions/prediction.schema";
+import type { PredictionSummaryResponse } from "@/api/internal/predictions/prediction.schema";
 
 interface PredictionListProps {
   user: UserResponse | null; //?
-  predictions: PredictionResponse[];
-  handlePredictionChange: (prediction: PredictionResponse) => void;
+  predictions: PredictionSummaryResponse[];
+  handlePredictionChange: (prediction: PredictionSummaryResponse) => void;
   handlePredictionDelete: (predictionId: string) => void;
 }
 
@@ -16,13 +16,13 @@ export function PredictionList({
   handlePredictionChange,
   handlePredictionDelete,
 }: PredictionListProps) {
-  const [resolveTarget, setResolveTarget] = useState<PredictionResponse | null>(null);
-  const [editTarget, setEditTarget] = useState<PredictionResponse | null>(null);
+  const [resolveTarget, setResolveTarget] = useState<PredictionSummaryResponse | null>(null);
+  const [editTarget, setEditTarget] = useState<PredictionSummaryResponse | null>(null);
 
-  async function handleTargetResolve(value: PredictionResponse | null) {
+  async function handleTargetResolve(value: PredictionSummaryResponse | null) {
     setResolveTarget(value);
   }
-  async function handleTargetEdit(value: PredictionResponse | null) {
+  async function handleTargetEdit(value: PredictionSummaryResponse | null) {
     setEditTarget(value);
   }
 

@@ -29,6 +29,7 @@ public class AppDbContext : DbContext
             entity.Property(u => u.PasswordHash).HasColumnName("password_hash");
             entity.Property(u => u.Role).HasColumnName("role");
             entity.Property(u => u.CreatedAt).HasColumnName("created_at");
+            entity.Property(u => u.AvatarPath).HasColumnName("avatar_path");
 
             entity.HasIndex(u => u.Email).IsUnique();
             entity.HasIndex(u => u.Username).IsUnique();
@@ -59,6 +60,7 @@ public class AppDbContext : DbContext
             entity.Property(p => p.CreatorId).HasColumnName("creator_id");
             entity.Property(p => p.TopicId).HasColumnName("topic_id");
             entity.Property(p => p.PredictionName).HasColumnName("prediction_name");
+            entity.Property(p => p.PredictionRules).HasColumnName("prediction_rules");
             entity.Property(p => p.PredictionDate).HasColumnName("prediction_date");
             entity.Property(p => p.ResolutionDate).HasColumnName("resolution_date");
             entity.Property(p => p.IsResolved).HasColumnName("is_resolved");

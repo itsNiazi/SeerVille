@@ -4,8 +4,10 @@ CREATE TABLE Users (
   email           TEXT NOT NULL UNIQUE,
   password_hash   TEXT NOT NULL,
   role            TEXT NOT NULL DEFAULT 'user',             -- user | moderator | admin
-  created_at      TEXT NOT NULL DEFAULT (datetime('now'))
+  created_at      TEXT NOT NULL DEFAULT (datetime('now')),
+  avatar_path     TEXT NOT NULL DEFAULT '/avatars/avatar.png'
   -- IsDeleted?
+  -- IsBanned?
 );
 
 CREATE TABLE Topics (
@@ -19,6 +21,7 @@ CREATE TABLE Predictions (
   creator_id        TEXT NOT NULL,
   topic_id          TEXT NOT NULL,
   prediction_name   TEXT NOT NULL,
+  prediction_rules  TEXT NOT NULL DEFAULT 'temp text', -- Fix this later 
   prediction_date   TEXT NOT NULL DEFAULT (datetime('now')),
   resolution_date   TEXT NOT NULL,
   is_resolved       BOOLEAN DEFAULT FALSE,

@@ -12,4 +12,5 @@ public class UserDto
     public required string Role { get; set; }
     public required string AccessToken { get; set; }
     public required DateTime CreatedAt { get; set; }
+    public required string AvatarPath { get; set; }
 }
