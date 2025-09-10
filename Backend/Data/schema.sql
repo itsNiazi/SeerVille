@@ -13,7 +13,8 @@ CREATE TABLE Users (
 CREATE TABLE Topics (
   topic_id        TEXT PRIMARY KEY,
   name            TEXT UNIQUE NOT NULL,
-  description     TEXT
+  description     TEXT,
+  icon            TEXT        
 );
 
 CREATE TABLE Predictions (
@@ -21,7 +22,7 @@ CREATE TABLE Predictions (
   creator_id        TEXT NOT NULL,
   topic_id          TEXT NOT NULL,
   prediction_name   TEXT NOT NULL,
-  prediction_rules  TEXT NOT NULL DEFAULT 'temp text', -- Fix this later 
+  prediction_rules  TEXT NOT NULL DEFAULT 'temp text',      -- Fix this later 
   prediction_date   TEXT NOT NULL DEFAULT (datetime('now')),
   resolution_date   TEXT NOT NULL,
   is_resolved       BOOLEAN DEFAULT FALSE,

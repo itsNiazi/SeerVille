@@ -16,7 +16,9 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"form">
   const router = useRouter();
   const isLoading = useRouterState({ select: (s) => s.isLoading });
   const navigate = useNavigate();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isLoggingIn = isLoading || isSubmitting;
   const [formError, setFormError] = useState("");
   const [error, setError] = useState("");
 
@@ -28,8 +30,8 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"form">
 
     try {
       const formData = new FormData(event.currentTarget);
-      const username = formData.get("username")?.toString();
       const email = formData.get("email")?.toString();
+      const username = formData.get("username")?.toString();
       const password = formData.get("password")?.toString();
 
       if (!username || !email || !password) {
@@ -72,8 +74,6 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<"form">
       setIsSubmitting(false);
     }
   }
-
-  const isLoggingIn = isLoading || isSubmitting;
 
   return (
     <>

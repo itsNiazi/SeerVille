@@ -1,3 +1,4 @@
+using Backend.DTOs.User;
 using Backend.Entities;
 
 namespace Backend.Interfaces;
@@ -9,6 +10,12 @@ public interface IUserRepository
     /// </summary>
     /// <returns><para>A list of<c><see cref="User"/></c></para></returns>
     Task<List<User>> GetAllAsync();
+
+    Task<List<UserPredictionsDto>> GetUserPredictionsAsync(Guid userId);
+
+    Task<UserStatsDto> GetUserStatsAsync(Guid userId);
+
+    Task<List<UserTopicStatsDto>> GetUserTopTopicsAsync(Guid userId);
 
     /// <summary>
     /// Retrieves user with provided unique identifier from the database.

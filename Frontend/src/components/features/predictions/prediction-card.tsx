@@ -506,7 +506,7 @@ export function PredictionDrawer({ prediction }) {
   return (
     <Drawer>
       <DrawerTrigger>
-        <CardTitle className="tabular-nums @[250px]/card:text-sm leading-6 hover:underline cursor-pointer max-w-45 max-h-[48px] overflow-hidden line-clamp-2">
+        <CardTitle className="tabular-nums text-[15px] leading-6 hover:underline cursor-pointer max-w-45 max-h-[48px] overflow-hidden line-clamp-2">
           {prediction.predictionName}
         </CardTitle>
       </DrawerTrigger>

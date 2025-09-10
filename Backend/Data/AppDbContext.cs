@@ -45,6 +45,7 @@ public class AppDbContext : DbContext
             entity.Property(t => t.TopicId).HasColumnName("topic_id");
             entity.Property(t => t.Name).HasColumnName("name");
             entity.Property(t => t.Description).HasColumnName("description");
+            entity.Property(t => t.Icon).HasColumnName("icon");
 
             entity.HasIndex(t => t.Name).IsUnique();
         });

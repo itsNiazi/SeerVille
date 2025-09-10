@@ -20,6 +20,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
   const search = Route.useSearch();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isLoggingIn = isLoading || isSubmitting;
   const [formError, setFormError] = useState("");
   const [error, setError] = useState("");
 
@@ -76,8 +77,6 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"form">)
       setIsSubmitting(false);
     }
   }
-
-  const isLoggingIn = isLoading || isSubmitting;
 
   return (
     <>

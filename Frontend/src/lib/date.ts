@@ -1,7 +1,7 @@
 import { assert } from "./validation";
 
 /** Converts calendar date into UTC (ISO) string: '2025-12-31T23:59:59.999Z'  */
-export function convertToUtcIso(dateString: string): string {
+export function convertToUtcIso(dateString: string) {
   assert.isString(dateString);
   assert.isNotEmptyOrNull(dateString);
   assert.isValidDate(dateString);
@@ -12,7 +12,7 @@ export function convertToUtcIso(dateString: string): string {
 }
 
 /** Converts "2025-12-31 23:59:59.999" to "2025-12-31T23:59:59.999Z" */
-export function convertToIsoString(dateString: string): string {
+export function convertToIsoString(dateString: string) {
   assert.isString(dateString);
   assert.isNotEmptyOrNull(dateString);
   assert.isValidDate(dateString);
@@ -37,4 +37,14 @@ export function convertToLocalDate(dateString: string) {
     year: "numeric",
   });
   return utcDate;
+}
+
+/** Converts "2025-12-29 12:36:28.218305" to "2025-12-29" */
+export function ConvertToYMD(isoString: string) {
+  const date = new Date(isoString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 }
