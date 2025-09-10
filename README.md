@@ -1,5 +1,4 @@
 <div align="center">
-    <img src="./Frontend/public/img.jpg" alt="SeerVille" width="100" style="border-radius: 22px; overflow: hidden;"/> <br/>
     <h1>SeerVille</h1>
     <p>🚧[Work In Progress]🚧</p>
   <br/>
