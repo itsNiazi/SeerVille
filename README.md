@@ -15,9 +15,11 @@
 
 ## Demo
 
-![Watch the demo](https://github.com/itsNiazi/SeerVille/tree/master/Frontend/public/demo/demo.mp4)
+![Watch the demo](./Frontend/public/demo/demo.gif)
 
-## Features
+## App Features
+
+## System Features
 
 - 🗃️ Normalized DB (3NF)
 - 📬 RESTful API
