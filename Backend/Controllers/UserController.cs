@@ -2,6 +2,7 @@ using Backend.DTOs;
 using Backend.DTOs.User;
 using Backend.Helpers;
 using Backend.Interfaces;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,54 @@ namespace Backend.Controllers
         {
             var users = await _userService.GetAllAsync();
             return Ok(users);
+        }
+
+        [HttpGet("predictions")]
+        public async Task<IActionResult> GetUserPredictions()
+        {
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return Unauthorized("User identifier not found.");
+            }
+
+            Guid userId = Guid.Parse(userIdString);
+            var predictions = await _userService.GetUserPredictionsAsync(userId);
+            return Ok(predictions);
+        }
+
+
+        [HttpGet("stats")]
+        public async Task<IActionResult> GetUserStats()
+        {
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return Unauthorized("User identifier not found.");
+            }
+
+            Guid userId = Guid.Parse(userIdString);
+
+            var stats = await _userService.GetUserStatsAsync(userId);
+            return Ok(stats);
+        }
+
+        [HttpGet("topics")]
+        public async Task<IActionResult> GetUserTopTopics()
+        {
+            var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdString))
+            {
+                return Unauthorized("User identifier not found.");
+            }
+
+            Guid userId = Guid.Parse(userIdString);
+
+            var stats = await _userService.GetUserTopTopicsAsync(userId);
+            return Ok(stats);
         }
 
         /// <summary>

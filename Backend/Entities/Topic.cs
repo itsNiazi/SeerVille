@@ -8,6 +8,7 @@ public class Topic
     public required Guid TopicId { get; set; }
     public required string Name { get; set; }
     public required string Description { get; set; }
+    public string? Icon { get; set; }
 
     // Navigational hmm?
     public ICollection<Prediction>? Predictions { get; set; }

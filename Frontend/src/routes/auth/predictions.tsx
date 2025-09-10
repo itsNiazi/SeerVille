@@ -69,8 +69,8 @@ function PredictionsComponent() {
   }
 
   return (
-    <section className="max-w-[1400px] w-[95%] mx-auto py-6">
-      <div className="flex justify-end mb-5 gap-2 ">
+    <section className="max-w-[1400px] w-[95%] mx-auto py-8">
+      <div className="flex justify-end mb-8 gap-2 ">
         <SelectBox label="Sort By:" data={sortingFilters} onChange={handleSortChange} />
         <SelectBox label="Status:" data={statusFilters} onChange={handleStatusChange} />
         <Combobox data={topics} onChange={handleTopicSelect} />

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IconDatabase, IconHelp, IconSearch, IconSettings } from "@tabler/icons-react";
+import { IconHelp, IconSettings } from "@tabler/icons-react";
 import { NavMain } from "@/components/common/nav/nav-main";
 import { NavSecondary } from "@/components/common/nav/nav-secondary";
 import { NavUser } from "@/components/common/nav/nav-user";
@@ -16,15 +16,29 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/auth/dashboard", //hmm
-      // icon: IconDashboard,
+      url: "/auth/dashboard",
       icon: "\u{1F3E0}",
     },
     {
       title: "Predictions",
       url: "/auth/predictions",
-      // icon: IconListDetails,
+
+      icon: "🗂️",
+    },
+    {
+      title: "Seer Mode",
+      url: "#",
       icon: "\u{1F52E}",
+    },
+    {
+      title: "Achievements",
+      url: "#",
+      icon: "🎖️",
+    },
+    {
+      title: "Leaderboard",
+      url: "#",
+      icon: "🏆",
     },
   ],
   navSecondary: [
@@ -38,18 +52,6 @@ const data = {
       url: "#",
       icon: IconHelp,
     },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
-  documents: [
-    {
-      name: "Predictions",
-      url: "#",
-      icon: IconDatabase,
-    },
   ],
 };
 
@@ -60,7 +62,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <a href="#">
-              <span className="text-base font-semibold p-1.5"> 🔭 Seerville</span>
+              <span className="text-xl font-semibold p-1.5">🔭 Seerville</span>
             </a>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -11,6 +11,12 @@ public interface IUserService
     /// <returns>A list of users in the system conforming to BaseUserDto.</returns>
     Task<List<BaseUserDto>> GetAllAsync();
 
+    Task<List<UserPredictionsDto>> GetUserPredictionsAsync(Guid userId);
+
+    Task<UserStatsDto> GetUserStatsAsync(Guid userId);
+
+    Task<List<UserTopicStatsDto>> GetUserTopTopicsAsync(Guid userId);
+
     /// <summary>
     /// Retrieves user with provided unique identifier from the data layer.
     /// </summary>

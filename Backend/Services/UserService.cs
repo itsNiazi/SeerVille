@@ -25,6 +25,24 @@ public class UserService : IUserService
     }
 
 
+    public async Task<List<UserPredictionsDto>> GetUserPredictionsAsync(Guid userId)
+    {
+        return await _userRepo.GetUserPredictionsAsync(userId);
+    }
+
+
+    public async Task<UserStatsDto> GetUserStatsAsync(Guid userId)
+    {
+        return await _userRepo.GetUserStatsAsync(userId);
+    }
+
+
+    public async Task<List<UserTopicStatsDto>> GetUserTopTopicsAsync(Guid userId)
+    {
+        return await _userRepo.GetUserTopTopicsAsync(userId);
+    }
+
+
     public async Task<BaseUserDto?> GetByIdAsync(Guid id)
     {
         var user = await _userRepo.GetByIdAsync(id);

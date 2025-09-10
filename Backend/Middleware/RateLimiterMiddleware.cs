@@ -20,7 +20,7 @@ public static class RateLimiterExtension
 
                 return RateLimitPartition.GetTokenBucketLimiter(identifier, _ => new TokenBucketRateLimiterOptions
                 {
-                    TokenLimit = 10,
+                    TokenLimit = 50,
                     QueueLimit = 0,
                     ReplenishmentPeriod = TimeSpan.FromMinutes(1),
                     TokensPerPeriod = 10,
