@@ -1,9 +1,7 @@
-
-
 <div align="center">
     <img src="./Frontend/public/img.jpg" alt="SeerVille" width="100" style="border-radius: 22px; overflow: hidden;"/> <br/>
     <h1>SeerVille</h1>
-    <p># 🚧[Work In Progress]🚧</p>
+    <p>🚧[Work In Progress]🚧</p>
   <br/>
     <p>Are you a person with sharp intuition?</p>
     <p>Do you pride yourself on staying informed and anticipating what’s next?</p>
@@ -15,21 +13,12 @@
 </div>
 <br />
 
-
-## Tech Stack
-**Frontend:**
-- TypeScript
-- React
-- Tanstack Router
-- TailwindCSS
-  
-**Backend:** 
-- ASP.NET Core (.NET 8)
-- SQLite
-
 ## Demo
 
+![Watch the demo](https://github.com/itsNiazi/SeerVille/tree/master/Frontend/public/demo/demo.mp4)
+
 ## Features
+
 - 🗃️ Normalized DB (3NF)
 - 📬 RESTful API
 - 🔐 Authentication with JWT
@@ -37,22 +26,39 @@
 - 🚦 IP-Filter, Rate-Limiter & Throttle
 
 In Progress:
+
 - Exception & Error handler
 - Graceful shutdown
 - Logger
 
+## Tech Stack
+
+**Frontend:**
+
+- TypeScript
+- React
+- Tanstack Router
+- TailwindCSS
+
+**Backend:**
+
+- ASP.NET Core (.NET 8)
+- SQLite
 
 ## What I Focused On
 
 ## What I Learned
 
 ## Getting Started
+
 ### Prerequisites
--  Nodejs
+
+- Nodejs
 - .NET sdk?
--  SQLite3?
-  
+- SQLite3?
+
 [RUN LOCALLY]
+
 ```bash
 git clone ...
 cd ..
@@ -71,4 +77,3 @@ This project is open-source and available under the [MIT License](LICENSE).
 
 Feel free to fork, modify, and deploy it for personal or commercial use.  
 Contributions are welcome via pull requests or issues.
-
